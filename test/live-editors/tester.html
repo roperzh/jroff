@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script src="../../dist/jroff.js"></script>
+
+    <style type="text/css">
+      *, *:before, *:after {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .column {
+        float: left;
+        margin: 15px;
+      }
+
+      .column-half {
+        width: calc(50% - 30px);
+      }
+
+      h4 {
+        display: inline-block;
+        padding: 3px 8px;
+        margin: 5px 0 15px;
+        color: #FFFFFF;
+        font-family: sans-serif;
+        background: #222222;
+      }
+
+      textarea {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="column column-half">
+      <h4>Live editor</h4>
+      <textarea id="content" autofocus cols="50" rows="10"></textarea>
+    </div>
+
+    <div class="column column-half">
+      <h4>Raw HTML output</h4>
+      <textarea name="" id="result2" cols="50" rows="10"></textarea>
+    </div>
+
+    <div class="column">
+      <h4>Preview</h4>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var textarea = document.getElementById('content');
+        var generator = new Jroff.HTMLGenerator();
+
+        textarea.oninput = function(e) {
+          var result = generator.generate(this.value, 'an');
+          document.getElementById('result').innerHTML = result;
+          document.getElementById('result2').innerHTML = result;
+        };
+      });
+    </script>
+  </body>
+</html>
