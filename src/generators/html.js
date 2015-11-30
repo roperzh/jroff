@@ -1,8 +1,15 @@
 var HTMLGenerator = function () {};
 
 HTMLGenerator.prototype.generate = function (source, macroLib) {
-  var parser = new Parser(source),
-    ast = parser.buildAST();
+  var parser,
+    ast;
+
+  if(!source) {
+    return '';
+  }
+
+  parser = new Parser(source);
+  ast = parser.buildAST();
 
   macroLib = macroLib || 'doc';
 
