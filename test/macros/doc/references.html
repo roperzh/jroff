@@ -1,0 +1,64 @@
+<!--
+  @it stores and prints multiple author names
+
+  .Rs
+  .%A Matthew Bar
+  .%A John Foo
+  .%T Implementation Notes on foobar(1)
+  .%R Technical Report ABC-DE-12-345
+  .%Q Drofnats College, Nowhere
+  .%D April 1991
+  .Re
+-->
+
+<p>
+  Matthew Bar and John Foo,  April 1991,  Drofnats College,
+  Nowhere,  Technical Report ABC-DE-12-345,
+  Implementation Notes on foobar(1)
+</p>
+
+<!--
+  @it stores and prints the correct references
+
+  .Rs
+  .%A Reference author name; one name per invocation
+  .%B Book title
+  .%D Date
+  .%I Issuer/publisher name
+  .%J Journal name
+  .%N Issue number
+  .%O Optional information
+  .%P Page number
+  .%Q Corporate or foreign author
+  .%R Report name
+  .%T Title of article
+  .%V Volume
+  .Re
+-->
+
+<p>
+  Reference author name; one name per invocation,  Book title,  Date,
+  Issuer/publisher name,  Journal name, Issue number,
+  Optional information,  Page number,  Corporate or foreign author,
+  Report name,  Title of article,  Volume
+</p>
+
+<!--
+  @it reset all the references everytime .Rs is called
+
+  .Rs
+  .%A Matthew Bar
+  .%A John Foo
+  .%T Implementation Notes on foobar(1)
+  .Rs
+  .%A Printed author
+  .%R Technical Report ABC-DE-12-345
+  .%Q Drofnats College, Nowhere
+  .%D April 1991
+  .Re
+-->
+
+<p>
+  Printed author,  April 1991,  Drofnats College, Nowhere,
+  Technical Report ABC-DE-12-345
+</p>

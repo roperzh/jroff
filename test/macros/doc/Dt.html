@@ -1,0 +1,115 @@
+<!--
+  @it uses the correct default values if no parameters are specified
+
+  .Dt
+-->
+<p>
+  <span>UNTITLED</span>
+  <span>LOCAL</span>
+  <span>UNTITLED</span>
+</p>
+<section>
+
+
+<!--
+ @it uses the correct title param if provided
+
+  .Dt FOO
+-->
+<p>
+  <span>FOO</span>
+  <span>LOCAL</span>
+  <span>FOO</span>
+</p>
+<section>
+
+<!--
+  @it uses the string representation of the section name if no volume is provided
+
+  .Dt FOO 2
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span>BSD System Calls Manual</span>
+  <span>FOO(2)</span>
+</p>
+<section>
+
+<!--
+  @it uses LOCAL as a default value if invalid section and empty volume
+
+  .Dt FOO bar
+-->
+
+<p>
+  <span>FOO(bar)</span>
+  <span>LOCAL</span>
+  <span>FOO(bar)</span>
+</p>
+<section>
+
+<!--
+  @it does not display the volume text if is not a valid architecture
+
+  .Dt FOO 2 bar
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span>BSD System Calls Manual</span>
+  <span>FOO(2)</span>
+</p>
+<section>
+
+<!--
+  @it displays architecture text if volume param is a valid architecture
+
+  .Dt FOO 2 i386
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span>BSD/i386 System Calls Manual</span>
+  <span>FOO(2)</span>
+</p>
+<section>
+
+<!--
+  @it displays volume text if volume param is a valid volume
+
+  .Dt FOO 2 USD
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span>User's Supplementary Documents</span>
+  <span>FOO(2)</span>
+</p>
+<section>
+
+<!--
+  @it uses the verbatim volume param if the section param is empty
+
+  .Dt FOO "" bar
+-->
+
+<p>
+  <span>FOO</span>
+  <span>bar</span>
+  <span>FOO</span>
+</p>
+<section>
+
+<!--
+  @it uses the verbatim volume param if the section param is empty even if its a valid volume
+
+  .Dt FOO "" USD
+-->
+
+<p>
+  <span>FOO</span>
+  <span>USD</span>
+  <span>FOO</span>
+</p>
+<section>

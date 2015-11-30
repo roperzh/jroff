@@ -1,0 +1,6 @@
+node_modules
+coverage
+docs
+.DS_Store
+.inch.config.json
+docs.json

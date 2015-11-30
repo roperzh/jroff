@@ -1,0 +1,81 @@
+<!--
+  @it displays a chunk of text as italic if the -emphasis flag is provided
+
+  .Bf -emphasis
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+  .Ef
+-->
+
+<i>
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+</i>
+
+<!--
+  @it displays a chunk of text as roman if the -literal flag is provided
+
+  .Bf -literal
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+  .Ef
+-->
+
+<span>
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+</span>
+
+<!--
+  @it displays a chunk of text as bold if the -symbolic flag is provided
+
+  .Bf -symbolic
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+  .Ef
+-->
+
+<strong>
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+</strong>
+
+<!--
+  @it displays a chunk of text as roman if an invalid flag is provided
+
+  .Bf -invalid
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+  .Ef
+-->
+
+<span>
+  Lorem ipsum dolor
+  sit amet, consectetur adipisicing elit.
+  Saepe repellendus animi at dolorum id labore fugiat
+</span>
+
+<!--
+  @it allows nested font modes
+
+  .Bf -emphasis
+  Lorem ipsum dolor
+  .Bf -symbolic
+  sit amet, consectetur adipisicing elit.
+  .Ef
+  Saepe repellendus animi at dolorum id labore fugiat
+  .Ef
+-->
+
+<i>
+  Lorem ipsum dolor
+  <strong>sit amet, consectetur adipisicing elit.</strong>
+  Saepe repellendus animi at dolorum id labore fugiat
+</i>

@@ -1,0 +1,68 @@
+<!--
+  @it if only one argument is provided, displays a function signature without parameters
+
+  .Fn getchar
+-->
+
+<span>
+  <strong>getchar</strong>()
+</span>
+
+<!--
+  @it properly print a function with variables
+
+  .Fn align "char *ptr"
+-->
+
+<span>
+  <strong>align</strong>
+  (char *ptr)
+</span>
+
+<!--
+  @it accepts parenthesis as a variable argument
+
+  .Fn strlen )
+-->
+
+<span>
+  <strong>strlen</strong>
+  ())
+</span>
+
+<!--
+  @it prepends the function type if the .Ft macro is called before
+
+  .Ft int
+  .Fn some_function "param1 *kind"
+-->
+
+<span>
+  <i>int</i>
+  <strong>some_function</strong>
+  (param1 *kind)
+</span>
+
+<!--
+  @it cleans the function type stored in the buffer on every call
+
+  .Ft int
+  .Fn some_function
+  .Fn some_function2
+-->
+
+<span>
+  <i>int</i>
+  <strong>some_function</strong>
+  ()
+</span>
+<span>
+  <strong>some_function2</strong>
+  ()
+</span>
+
+<!--
+  @it returns an empty string if no arguments are provided
+
+  .Fn
+-->
