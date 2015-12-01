@@ -1,4 +1,4 @@
-# jroff
+![jroff](https://cloud.githubusercontent.com/assets/4419992/11488319/61d7086e-97a4-11e5-9ea7-2276c409c208.png)
 
 ## Usage
 
@@ -50,14 +50,15 @@ Macros supported by groff are stored in `default.js`.
 ***make dist:*** beautify and build both minified and concatenated versions
 of the code.
 
-***make hint:*** run [js-hint] over the test files and the concatenated
-non-minified version of the code.
+***make hint:*** run [js-hint](http://jshint.com/) over the test files
+and the concatenated non-minified version of the code.
 
-***make beautify:*** run [js-beautify] over all the JavaScript files.
+***make beautify:*** run [js-beautify](https://github.com/beautify-web/js-beautify)
+over all the JavaScript files.
 
 ***make doc:*** build a local documentation based on the current version
-of the code, useful to preview the documentation before pushing. Check the next
-section for more details.
+of the code, useful to preview the documentation before pushing.
+Check the next section for more details.
 
 ### Documenting new code
 
@@ -66,23 +67,24 @@ the documentation, so all the new code must be documented using jsdoc
 tags. An useful reference can be found [here](http://usejsdoc.org/index.html).
 
 Also, due to [limitations](https://github.com/jsdoc3/jsdoc/issues/930) with
-jsdoc and UMD it is required to add the `@alias` tag to all functions, constructors
-and namespaces.
+jsdoc and UMD it is required to add the `@alias` tag to all functions,
+constructors and namespaces.
 
 ### Generating the documentation
 
-The Makefile includes an useful command to generate and push the documentation
-to GitHub and GitHub pages, you can simply run:
+The Makefile includes an useful command to generate and push the
+documentation to GitHub and GitHub pages, you can simply run:
 
 ```console
 make doc-build
 ```
 
-**Note:** please make sure to stash or commit all your changes before building
-the documentation.
+**Note:** please make sure to stash or commit all your changes
+before building the documentation.
 
 If you want to preview the changes before pushing, you can generate
-the documentation with the `doc` task and then and open `docs/index.html` in your browser.
+the documentation with the `doc` task and then and open `docs/index.html`
+in your browser.
 
 This is an example using OS X:
 
@@ -102,7 +104,7 @@ open docs/index.html
 - [ ] Finish unit tests
 - [x] Fix issues with the parser
 - [ ] Add missing macros
-- [ ] Clarify that we do not intend to copy the behavior of the groff_html parser
+- [ ] Clarify that we do not intend to copy the behavior of groff_html
 - [ ] Documentation
   - [x] Implement a build system to document pages
   - [ ] Add documentation to all the code
@@ -129,5 +131,3 @@ All the code contained in this repository, unless explicitly stated, is
 licensed under MIT license.
 
 A copy of the license can be found inside the [LICENSE](LICENSE) file.
-
-[js-hint](http://jshint.com/)
