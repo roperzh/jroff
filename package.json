@@ -6,7 +6,10 @@
   "scripts": {
     "test": "make test"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roperzh/jroff.git"
+  },
   "keywords": [
     "man",
     "mdoc",
