@@ -1,5 +1,9 @@
 ![jroff](https://cloud.githubusercontent.com/assets/4419992/11488319/61d7086e-97a4-11e5-9ea7-2276c409c208.png)
 
+![travis](https://travis-ci.org/roperzh/jroff.svg?branch=master)
+[![Code Climate](https://codeclimate.com/github/roperzh/jroff/badges/gpa.svg)](https://codeclimate.com/github/roperzh/jroff)
+[![Test Coverage](https://codeclimate.com/github/roperzh/jroff/badges/coverage.svg)](https://codeclimate.com/github/roperzh/jroff/coverage)
+
 ## Usage
 
 (**TODO**)
