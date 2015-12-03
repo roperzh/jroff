@@ -15,7 +15,7 @@
   "noarg": true,
   "regexp": true,
   "undef": true,
-  "unused": false,
+  "unused": true,
   "strict": false,
   "trailing": true,
   "smarttabs": true,
