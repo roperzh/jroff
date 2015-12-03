@@ -43,10 +43,6 @@ test:
 	node_modules/.bin/istanbul cover \
 		node_modules/.bin/_mocha test/test.js -- -R dot
 
-html:
-	rm -rf teste_man.html && cat teste.man | groff -mandoc -Thtml > teste_man.html
-	rm -rf teste_mdoc.html && cat teste.mdoc | groff -mandoc -Thtml > teste_mdoc.html
-
 doc: build
 	$(notify_task)
 	node_modules/.bin/jsdoc --verbose -d docs -t node_modules/minami ${DIST}
