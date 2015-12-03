@@ -11,7 +11,7 @@ COLOR=\033[0;33m
 NO_COLOR=\033[0m
 DATE=$(date +'%y.%m.%d %H:%M:%S')
 
-all: build beautify test
+all: build test
 
 dist: beautify hint test min
 
