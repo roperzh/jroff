@@ -116,8 +116,7 @@ open docs/index.html
 - [ ] Look for more semantic markup
 - [ ] Review the README
 - [x] Better way to send arguments to macro calls
-- [ ] Add CI integration
-- [ ] Automatic detection of macros
+- [x] Add CI integration
 - [ ] Handle scape characters
 - [ ] Add support for nested numeric lists
 - [ ] Add support for `-compact` and `-width` arguments in lists
