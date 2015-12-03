@@ -206,6 +206,6 @@ Parser.prototype.startText = function (token) {
   this.ast.push(token);
 };
 
-Parser.prototype.stop = function (token) {
+Parser.prototype.stop = function () {
   this.state = BREAK;
 };

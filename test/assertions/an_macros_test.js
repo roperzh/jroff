@@ -12,8 +12,9 @@ describe('Macros', function () {
 
     describe('.TH', function () {
       it('stores in the buffer useful information', function () {
-        var text = 'FOO 1 "MARCH 1995" Linux "User Manuals"',
-          html = jroff.macros.an.TH.call(this.context, text);
+        var text = 'FOO 1 "MARCH 1995" Linux "User Manuals"';
+
+        jroff.macros.an.TH.call(this.context, text);
 
         assert.equal(this.context.buffer.title, 'FOO');
         assert.equal(this.context.buffer.section, '1');

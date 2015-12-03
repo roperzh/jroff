@@ -72,7 +72,7 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.generateTag = function (name, content, properties) {
+HTMLGenerator.prototype.generateTag = function (name, content) {
   var tags = name.split('>'),
     i = -1,
     openingTags = '',
