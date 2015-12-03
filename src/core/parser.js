@@ -185,7 +185,6 @@ Parser.prototype.concatenate = function (token) {
 };
 
 Parser.prototype.defaultError = function (token) {
-  debugger
   throw(
     'Error parsing argument with state: ' +
     this.state + ', input: ' + token.kind

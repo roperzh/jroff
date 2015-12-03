@@ -48,13 +48,16 @@
     number: /[\d]/
   };
 
-  var mergeObjects = function (obj1, obj2) {
-    var result = {};
+  var mergeObjects = function (objects) {
+    return objects.reduce(function (memo, object) {
+      for(var key in object) {
+        if(object.hasOwnProperty(key)) {
+          memo[key] = object[key];
+        }
+      }
 
-    for(var key in obj1) result[key] = obj1[key];
-    for(var key in obj2) result[key] = obj2[key];
-
-    return result;
+      return memo;
+    }, {});
   };
 
   var macros = {};
@@ -539,7 +542,6 @@
   };
 
   Parser.prototype.defaultError = function (token) {
-    debugger
     throw(
       'Error parsing argument with state: ' +
       this.state + ', input: ' + token.kind
@@ -812,6 +814,85 @@
     br: function () {
       return '<br>';
     }
+  };
+
+  var docSections = {
+    1: 'General Commands Manual',
+    2: 'System Calls Manual',
+    3: 'Library Functions Manual',
+    4: 'Kernel Interfaces Manual',
+    5: 'File Formats Manual',
+    6: 'Games Manual',
+    7: 'Miscellaneous Information Manual',
+    8: 'System Manager\'s Manual',
+    9: 'Kernel Developer\'s Manual'
+  };
+
+  var volumes = {
+    'USD': 'User\'s Supplementary Documents',
+    'PS1': 'Programmer\'s Supplementary Documents',
+    'AMD': 'Ancestral Manual Documents',
+    'SMM': 'System Manager\'s Manual',
+    'URM': 'User\'s Reference Manual',
+    'PRM': 'Programmer\'s Manual',
+    'KM': 'Kernel Manual',
+    'IND': 'Manual Master Index',
+    'LOCAL': 'Local Manual',
+    'CON': 'Contributed Software Manual'
+  };
+
+  var architectures = [
+  'alpha', 'acorn26', 'acorn32', 'algor', 'amd64', 'amiga', 'arc', 'arm26',
+  'arm32', 'atari', 'bebox', 'cats', 'cesfic', 'cobalt', 'dreamcast',
+  'evbarm', 'evbmips', 'evbppc', 'evbsh3', 'hp300', 'hp700', 'hpcmips',
+  'i386', 'luna68k', 'm68k', 'mac68k', 'macppc', 'mips', 'mmeye', 'mvme68k',
+  'mvmeppc', 'netwinder', 'news68k', 'newsmips', 'next68k', 'ofppc',
+  'pc532', 'pmax', 'pmppc', 'powerpc', 'prep', 'sandpoint', 'sgimips', 'sh3',
+  'shark', 'sparc', 'sparc64', 'sun3', 'tahoe', 'vax', 'x68k', 'x86_64'
+];
+
+  var fontModes = {
+    emphasis: 'i',
+    literal: 'span',
+    symbolic: 'strong'
+  };
+
+  var abbreviations = {
+    '-ansiC': 'ANSI X3.159-1989 (``ANSI C89\'\')',
+    '-ansiC-89': 'ANSI X3.159-1989 (``ANSI C89\'\')',
+    '-isoC': 'ISO/IEC 9899:1990 (``ISO C90\'\')',
+    '-isoC-90': 'ISO/IEC 9899:1990 (``ISO C90\'\')',
+    '-isoC-99': 'ISO/IEC 9899:1999 (``ISO C99\'\')',
+    '-iso9945-1-90': 'ISO/IEC 9945-1:1990 (``POSIX.1\'\')',
+    '-iso9945-1-96': 'ISO/IEC 9945-1:1996 (``POSIX.1\'\')',
+    '-p1003.1': 'IEEE Std 1003.1 (``POSIX.1\'\')',
+    '-p1003.1-88': 'IEEE Std 1003.1-1988 (``POSIX.1\'\')',
+    '-p1003.1-90': 'ISO/IEC 9945-1:1990 (``POSIX.1\'\')',
+    '-p1003.1-96': 'ISO/IEC 9945-1:1996 (``POSIX.1\'\')',
+    '-p1003.1b-93': 'IEEE Std 1003.1b-1993 (``POSIX.1\'\')',
+    '-p1003.1c-95': 'IEEE Std 1003.1c-1995 (``POSIX.1\'\')',
+    '-p1003.1g-2000': 'IEEE Std 1003.1g-2000 (``POSIX.1\'\')',
+    '-p1003.1i-95': 'IEEE Std 1003.1i-1995 (``POSIX.1\'\')',
+    '-p1003.1-2001': 'IEEE Std 1003.1-2001 (``POSIX.1\'\')',
+    '-p1003.1-2004': 'IEEE Std 1003.1-2004 (``POSIX.1\'\')',
+    '-iso9945-2-93': 'ISO/IEC 9945-2:1993 (``POSIX.2\'\')',
+    '-p1003.2': 'IEEE Std 1003.2 (``POSIX.2\'\')',
+    '-p1003.2-92': 'IEEE Std 1003.2-1992 (``POSIX.2\'\')',
+    '-p1003.2a-92': 'IEEE Std 1003.2a-1992 (``POSIX.2\'\')',
+    '-susv2': 'Version 2 of the Single UNIX Specification (``SUSv2\'\')',
+    '-susv3': 'Version 3 of the Single UNIX Specification (``SUSv3\'\')',
+    '-svid4': 'System V Interface Definition, Fourth Edition (``SVID4\'\')',
+    '-xbd5': 'X/Open System Interface Definitions Issue 5 (``XBD5\'\')',
+    '-xcu5': 'X/Open Commands and Utilities Issue 5 (``XCU5\'\')',
+    '-xcurses4.2': 'X/Open Curses Issue 4, Version 2 (``XCURSES4.2\'\')',
+    '-xns5': 'X/Open Networking Services Issue 5 (``XNS5\'\')',
+    '-xns5.2': 'X/Open Networking Services Issue 5.2 (``XNS5.2\'\')',
+    '-xpg3': 'X/Open Portability Guide Issue 3 (``XPG3\'\')',
+    '-xpg4': 'X/Open Portability Guide Issue 4 (``XPG4\'\')',
+    '-xpg4.2': 'X/Open Portability Guide Issue 4, Version 2 (``XPG4.2\'\')',
+    '-xsh5': 'X/Open System Interfaces and Headers Issue 5 (``XSH5\'\')',
+    '-ieee754': 'IEEE Std 754-1985',
+    '-iso8802-3': 'ISO/IEC 8802-3:1989'
   };
 
   /**
@@ -1276,7 +1357,7 @@
         tag = this.generateTag('i', args);
         contentStyles = 'margin-bottom:2%;display:inline-block;';
         break;
-      };
+      }
 
       return(
         pre + '<li><span style="' + tagStyles + '">' +
@@ -1476,7 +1557,7 @@
      *
      */
     Do: function () {
-      return this.generateTag('span', '``')
+      return this.generateTag('span', '``');
     },
 
     /**
@@ -1656,7 +1737,7 @@
 
       if(abbreviations[args]) {
         cont = this.generateTag('abbr', abbreviations[args]);
-      };
+      }
 
       return cont;
     },
@@ -1673,8 +1754,10 @@
      */
     At: function (version) {
       var base = ' AT&amp;T UNIX',
-        version = version.match(patterns.number),
-        preamble = version ? 'Version ' + version[0] : '';
+        preamble;
+
+      version = version.match(patterns.number);
+      preamble = version ? 'Version ' + version[0] : '';
 
       return this.generateTag('span', preamble + base);
     },
@@ -2068,8 +2151,8 @@
       args = this.parseArguments(args);
 
       if(!args[0]) {
-        return ''
-      };
+        return '';
+      }
 
       storedType = this.buffer.functionType;
       type = storedType ? this.generateTag('i', storedType) : '';
@@ -2172,85 +2255,6 @@
     },
   };
 
-  var docSections = {
-    1: 'General Commands Manual',
-    2: 'System Calls Manual',
-    3: 'Library Functions Manual',
-    4: 'Kernel Interfaces Manual',
-    5: 'File Formats Manual',
-    6: 'Games Manual',
-    7: 'Miscellaneous Information Manual',
-    8: 'System Manager\'s Manual',
-    9: 'Kernel Developer\'s Manual'
-  };
-
-  var volumes = {
-    'USD': 'User\'s Supplementary Documents',
-    'PS1': 'Programmer\'s Supplementary Documents',
-    'AMD': 'Ancestral Manual Documents',
-    'SMM': 'System Manager\'s Manual',
-    'URM': 'User\'s Reference Manual',
-    'PRM': 'Programmer\'s Manual',
-    'KM': 'Kernel Manual',
-    'IND': 'Manual Master Index',
-    'LOCAL': 'Local Manual',
-    'CON': 'Contributed Software Manual'
-  };
-
-  var architectures = [
-  'alpha', 'acorn26', 'acorn32', 'algor', 'amd64', 'amiga', 'arc', 'arm26',
-  'arm32', 'atari', 'bebox', 'cats', 'cesfic', 'cobalt', 'dreamcast',
-  'evbarm', 'evbmips', 'evbppc', 'evbsh3', 'hp300', 'hp700', 'hpcmips',
-  'i386', 'luna68k', 'm68k', 'mac68k', 'macppc', 'mips', 'mmeye', 'mvme68k',
-  'mvmeppc', 'netwinder', 'news68k', 'newsmips', 'next68k', 'ofppc',
-  'pc532', 'pmax', 'pmppc', 'powerpc', 'prep', 'sandpoint', 'sgimips', 'sh3',
-  'shark', 'sparc', 'sparc64', 'sun3', 'tahoe', 'vax', 'x68k', 'x86_64'
-]
-
-  var fontModes = {
-    emphasis: 'i',
-    literal: 'span',
-    symbolic: 'strong'
-  };
-
-  var abbreviations = {
-    '-ansiC': 'ANSI X3.159-1989 (``ANSI C89\'\')',
-    '-ansiC-89': 'ANSI X3.159-1989 (``ANSI C89\'\')',
-    '-isoC': 'ISO/IEC 9899:1990 (``ISO C90\'\')',
-    '-isoC-90': 'ISO/IEC 9899:1990 (``ISO C90\'\')',
-    '-isoC-99': 'ISO/IEC 9899:1999 (``ISO C99\'\')',
-    '-iso9945-1-90': 'ISO/IEC 9945-1:1990 (``POSIX.1\'\')',
-    '-iso9945-1-96': 'ISO/IEC 9945-1:1996 (``POSIX.1\'\')',
-    '-p1003.1': 'IEEE Std 1003.1 (``POSIX.1\'\')',
-    '-p1003.1-88': 'IEEE Std 1003.1-1988 (``POSIX.1\'\')',
-    '-p1003.1-90': 'ISO/IEC 9945-1:1990 (``POSIX.1\'\')',
-    '-p1003.1-96': 'ISO/IEC 9945-1:1996 (``POSIX.1\'\')',
-    '-p1003.1b-93': 'IEEE Std 1003.1b-1993 (``POSIX.1\'\')',
-    '-p1003.1c-95': 'IEEE Std 1003.1c-1995 (``POSIX.1\'\')',
-    '-p1003.1g-2000': 'IEEE Std 1003.1g-2000 (``POSIX.1\'\')',
-    '-p1003.1i-95': 'IEEE Std 1003.1i-1995 (``POSIX.1\'\')',
-    '-p1003.1-2001': 'IEEE Std 1003.1-2001 (``POSIX.1\'\')',
-    '-p1003.1-2004': 'IEEE Std 1003.1-2004 (``POSIX.1\'\')',
-    '-iso9945-2-93': 'ISO/IEC 9945-2:1993 (``POSIX.2\'\')',
-    '-p1003.2': 'IEEE Std 1003.2 (``POSIX.2\'\')',
-    '-p1003.2-92': 'IEEE Std 1003.2-1992 (``POSIX.2\'\')',
-    '-p1003.2a-92': 'IEEE Std 1003.2a-1992 (``POSIX.2\'\')',
-    '-susv2': 'Version 2 of the Single UNIX Specification (``SUSv2\'\')',
-    '-susv3': 'Version 3 of the Single UNIX Specification (``SUSv3\'\')',
-    '-svid4': 'System V Interface Definition, Fourth Edition (``SVID4\'\')',
-    '-xbd5': 'X/Open System Interface Definitions Issue 5 (``XBD5\'\')',
-    '-xcu5': 'X/Open Commands and Utilities Issue 5 (``XCU5\'\')',
-    '-xcurses4.2': 'X/Open Curses Issue 4, Version 2 (``XCURSES4.2\'\')',
-    '-xns5': 'X/Open Networking Services Issue 5 (``XNS5\'\')',
-    '-xns5.2': 'X/Open Networking Services Issue 5.2 (``XNS5.2\'\')',
-    '-xpg3': 'X/Open Portability Guide Issue 3 (``XPG3\'\')',
-    '-xpg4': 'X/Open Portability Guide Issue 4 (``XPG4\'\')',
-    '-xpg4.2': 'X/Open Portability Guide Issue 4, Version 2 (``XPG4.2\'\')',
-    '-xsh5': 'X/Open System Interfaces and Headers Issue 5 (``XSH5\'\')',
-    '-ieee754': 'IEEE Std 754-1985',
-    '-iso8802-3': 'ISO/IEC 8802-3:1989'
-  }
-
   var HTMLGenerator = function () {};
 
   HTMLGenerator.prototype.generate = function (source, macroLib) {
@@ -2266,7 +2270,7 @@
 
     macroLib = macroLib || 'doc';
 
-    this.macros = mergeObjects(macros.defaults, macros[macroLib]);
+    this.macros = mergeObjects([macros.defaults, macros[macroLib]]);
     this.buffer = {
       style: {
         indent: 8
@@ -2287,7 +2291,7 @@
         if(this.buffer.isParagraphOpen && node.value === 'Sh') {
           result += '</p>';
           this.buffer.isParagraphOpen = false;
-        };
+        }
 
         var f = this.macros[node.value] || function () {
           console.warn('warn: undefined macro ' + node.value);
@@ -2366,11 +2370,11 @@
       result = '',
       currentTag = secondTag;
 
-    content = parseArguments(content);
+    content = this.parseArguments(content);
 
     while(content[++i]) {
       currentTag = currentTag === firstTag ? secondTag : firstTag;
-      result += generateTag(currentTag, content[i]);
+      result += this.generateTag(currentTag, content[i]);
     }
 
     return result;

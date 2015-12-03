@@ -13,7 +13,7 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
 
   macroLib = macroLib || 'doc';
 
-  this.macros = mergeObjects(macros.defaults, macros[macroLib]);
+  this.macros = mergeObjects([macros.defaults, macros[macroLib]]);
   this.buffer = {
     style: {
       indent: 8
@@ -34,7 +34,7 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       if(this.buffer.isParagraphOpen && node.value === 'Sh') {
         result += '</p>';
         this.buffer.isParagraphOpen = false;
-      };
+      }
 
       var f = this.macros[node.value] || function () {
         console.warn('warn: undefined macro ' + node.value);
@@ -113,11 +113,11 @@ HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, conte
     result = '',
     currentTag = secondTag;
 
-  content = parseArguments(content);
+  content = this.parseArguments(content);
 
   while(content[++i]) {
     currentTag = currentTag === firstTag ? secondTag : firstTag;
-    result += generateTag(currentTag, content[i]);
+    result += this.generateTag(currentTag, content[i]);
   }
 
   return result;

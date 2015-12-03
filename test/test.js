@@ -39,7 +39,7 @@ files.forEach(function (f) {
         parsed = generator.generate(rawMan);
 
       runTest(message, html, parsed);
-    };
+    }
   });
 });
 

@@ -31,13 +31,16 @@ var patterns = {
   number: /[\d]/
 };
 
-var mergeObjects = function (obj1, obj2) {
-  var result = {};
+var mergeObjects = function (objects) {
+  return objects.reduce(function (memo, object) {
+    for(var key in object) {
+      if(object.hasOwnProperty(key)) {
+        memo[key] = object[key];
+      }
+    }
 
-  for(var key in obj1) result[key] = obj1[key];
-  for(var key in obj2) result[key] = obj2[key];
-
-  return result;
+    return memo;
+  }, {});
 };
 
 var macros = {};
