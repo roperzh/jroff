@@ -31,6 +31,17 @@ var patterns = {
   number: /[\d]/
 };
 
+/**
+ * Create a new object with all the properties present in an array of n
+ * objects.
+ *
+ * @argument {array} objects to be combined
+ *
+ * @returns {object}
+ *
+ * @since 0.0.1
+ *
+ */
 var mergeObjects = function (objects) {
   return objects.reduce(function (memo, object) {
     for(var key in object) {

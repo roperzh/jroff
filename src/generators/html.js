@@ -132,8 +132,6 @@ HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, conte
  *
  * @returns {array}
  *
- * @alias parseArguments
- *
  * @since 0.0.1
  *
  */
@@ -145,10 +143,31 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   });
 };
 
+/**
+ * Shortcut to join an array using whitespaces
+ *
+ * @argument {array} arr
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
 HTMLGenerator.prototype.join = function (arr) {
   return Array.prototype.join.call(arr, ' ');
 };
 
-HTMLGenerator.prototype.isInsideOf = function (section) {
+/**
+ * Useful for macros that require specific behavior inside of a section
+ *
+ * @argument {string} section name
+ *
+ * @returns {boolean} wether the value of this.buffer.section is equal to
+ * the argument
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.isInsideOfSection = function (section) {
   return this.buffer.section.toLowerCase() === section.toLowerCase();
 };
