@@ -2,7 +2,7 @@ var assert = require('assert'),
   jroff = require('../../dist/jroff');
 
 describe('Macros', function () {
-  describe('doc', function () {
+  describe('doc library', function () {
     before(function () {
       this.context = new jroff.HTMLGenerator();
       this.context.buffer = {};

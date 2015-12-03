@@ -36,7 +36,7 @@ files.forEach(function (f) {
         html = fileContents[i + 1],
         message = directives[1],
         rawMan = directives[2],
-        parsed = generator.generate(rawMan);
+        parsed = generator.generate(rawMan, extension);
 
       runTest(message, html, parsed);
     }
@@ -48,4 +48,5 @@ require('./assertions/patterns_test.js');
 require('./assertions/token_test.js');
 require('./assertions/token_factory_test.js');
 require('./assertions/lexer_test.js');
-require('./assertions/macros_test.js');
+require('./assertions/doc_macros_test.js');
+require('./assertions/an_macros_test.js');
