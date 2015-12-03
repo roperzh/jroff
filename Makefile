@@ -28,7 +28,7 @@ min:
 	gzip -9 < ${DIST} | wc
 	gzip -9 < ${DIST_MIN} | wc
 
-hint: build
+hint: build beautify
 	$(notify_task)
 	node_modules/.bin/jshint ${DIST}
 	node_modules/.bin/jshint ${TEST}
