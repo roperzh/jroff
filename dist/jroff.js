@@ -48,6 +48,17 @@
     number: /[\d]/
   };
 
+  /**
+   * Create a new object with all the properties present in an array of n
+   * objects.
+   *
+   * @argument {array} objects to be combined
+   *
+   * @returns {object}
+   *
+   * @since 0.0.1
+   *
+   */
   var mergeObjects = function (objects) {
     return objects.reduce(function (memo, object) {
       for(var key in object) {
@@ -633,7 +644,12 @@
      *
      */
     SH: function (args) {
-      return this.generateTag('h2', args);
+      var openingTag = '<section style="margin-left:' +
+        this.buffer.style.indent + '%;">';
+
+      this.buffer.section = args;
+
+      return '</section>' + this.generateTag('h2', args) + openingTag;
     },
 
     /**
@@ -1072,7 +1088,7 @@
      *
      */
     Cd: function (args) {
-      var tag = this.isInsideOf('SYNOPSIS') ? 'p>strong' : 'strong';
+      var tag = this.isInsideOfSection('SYNOPSIS') ? 'p>strong' : 'strong';
 
       args = args.replace(/"/g, '');
 
@@ -2234,7 +2250,7 @@
      */
     Vt: function (args) {
       var base = this.generateTag('i', args),
-        postamble = this.isInsideOf('SYNOPSIS') ? '<br>' : '';
+        postamble = this.isInsideOfSection('SYNOPSIS') ? '<br>' : '';
 
       return base + postamble;
     },
@@ -2389,8 +2405,6 @@
    *
    * @returns {array}
    *
-   * @alias parseArguments
-   *
    * @since 0.0.1
    *
    */
@@ -2402,11 +2416,32 @@
     });
   };
 
+  /**
+   * Shortcut to join an array using whitespaces
+   *
+   * @argument {array} arr
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
+   *
+   */
   HTMLGenerator.prototype.join = function (arr) {
     return Array.prototype.join.call(arr, ' ');
   };
 
-  HTMLGenerator.prototype.isInsideOf = function (section) {
+  /**
+   * Useful for macros that require specific behavior inside of a section
+   *
+   * @argument {string} section name
+   *
+   * @returns {boolean} wether the value of this.buffer.section is equal to
+   * the argument
+   *
+   * @since 0.0.1
+   *
+   */
+  HTMLGenerator.prototype.isInsideOfSection = function (section) {
     return this.buffer.section.toLowerCase() === section.toLowerCase();
   };
 
