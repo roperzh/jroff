@@ -254,7 +254,7 @@ macros.doc = {
    *
    */
   Cd: function (args) {
-    var tag = this.isInsideOf('SYNOPSIS') ? 'p>strong' : 'strong';
+    var tag = this.isInsideOfSection('SYNOPSIS') ? 'p>strong' : 'strong';
 
     args = args.replace(/"/g, '');
 
@@ -1416,7 +1416,7 @@ macros.doc = {
    */
   Vt: function (args) {
     var base = this.generateTag('i', args),
-      postamble = this.isInsideOf('SYNOPSIS') ? '<br>' : '';
+      postamble = this.isInsideOfSection('SYNOPSIS') ? '<br>' : '';
 
     return base + postamble;
   },
