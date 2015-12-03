@@ -64,7 +64,12 @@ macros.an = {
    *
    */
   SH: function (args) {
-    return this.generateTag('h2', args);
+    var openingTag = '<section style="margin-left:' +
+      this.buffer.style.indent + '%;">';
+
+    this.buffer.section = args;
+
+    return '</section>' + this.generateTag('h2', args) + openingTag;
   },
 
   /**
