@@ -3,7 +3,8 @@ var COMMENT = 1,
   IMACRO = 3,
   BREAK = 4,
   TEXT = 5,
-  EMPTY = 6;
+  EMPTY = 6,
+  ESCAPE = 7;
 
 var callableMacros = [
   'Ac', 'Ao', 'Bc', 'Bo', 'Brc', 'Bro', 'Dc', 'Do', 'Ec', 'Eo', 'Fc',
@@ -29,7 +30,7 @@ var patterns = {
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
-  escape: /\\./
+  escape: /\\\[.+|\\\(.{2}|\\./
 };
 
 /**

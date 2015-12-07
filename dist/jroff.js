@@ -21,7 +21,8 @@ var COMMENT = 1,
   IMACRO = 3,
   BREAK = 4,
   TEXT = 5,
-  EMPTY = 6;
+  EMPTY = 6,
+  ESCAPE = 7;
 
 var callableMacros = [
   'Ac', 'Ao', 'Bc', 'Bo', 'Brc', 'Bro', 'Dc', 'Do', 'Ec', 'Eo', 'Fc',
@@ -46,7 +47,8 @@ var patterns = {
   noWithespace: /\n|\S+/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
-  number: /[\d]/
+  number: /[\d]/,
+  escape: /\\\[.+|\\\(.{2}|\\./
 };
 
 /**
@@ -153,6 +155,20 @@ Token.isInlineMacro = function (str) {
  */
 Token.isMacro = function (str) {
   return patterns.macro.test(str);
+};
+
+/**
+ * Class method used to know wheter a string represents a escape sequence
+ *
+ * @param {string} str
+ *
+ * @returns {boolean}
+ *
+ * @since 0.0.1
+ *
+ */
+Token.isEscape = function(str) {
+  return patterns.escape.test(str);
 };
 
 /**
@@ -292,6 +308,8 @@ TokenFactory.prototype.create = function (rawToken) {
     kind = IMACRO;
   } else if(Token.isEmptyLine(rawToken)) {
     kind = BREAK;
+  } else if(Token.isEscape(rawToken)) {
+    kind = ESCAPE;
   }
 
   return new Token(rawToken, kind);
@@ -437,7 +455,15 @@ var Parser = function (input) {
     { state: TEXT,    input: COMMENT, action: 'ignore'       },
     { state: TEXT,    input: TEXT,    action: 'concatenate'  },
     { state: TEXT,    input: BREAK,   action: 'stop'         },
-    { state: TEXT,    input: IMACRO,  action: 'addInline'    }
+    { state: TEXT,    input: IMACRO,  action: 'addInline'    },
+    { state: TEXT,    input: ESCAPE,  action: 'startScape'   },
+
+    // ESCAPE mappings
+    { state: ESCAPE,  input: TEXT,    action: 'addEscape'     },
+    { state: ESCAPE,  input: IMACRO,  action: 'addEscape'     },
+    { state: ESCAPE,  input: COMMENT, action: 'ignore'       },
+    { state: ESCAPE,  input: BREAK,   action: 'ignore'       },
+    { state: ESCAPE,  input: '*',     action: 'defaultError' },
   ];
 
   /* beautify ignore:end */
@@ -491,6 +517,17 @@ var Parser = function (input) {
   };
 
   this.initMappings();
+};
+
+Parser.prototype.startScape = function(token) {
+  debugger
+};
+
+Parser.prototype.addEscape = function (token) {
+  this.state = TEXT;
+debugger
+  // this.lastTok()
+  //   .addSubNode(token);
 };
 
 Parser.prototype.addImacro = function (token) {
@@ -1659,7 +1696,7 @@ macros.doc = {
    *
    */
   Pp: function () {
-    this.buffer.isParagraphOpen = true;
+    this.buffer.openTags.push('p');
 
     return '<p>';
   },
@@ -2542,6 +2579,7 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
       indent: 8
     },
     lists: [],
+    openTags: [],
     section: ''
   };
 
@@ -2554,9 +2592,8 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
   return arr.reduce(function (result, node) {
     if(node.kind === MACRO || node.kind === IMACRO) {
 
-      if(this.buffer.isParagraphOpen && node.value === 'Sh') {
-        result += '</p>';
-        this.buffer.isParagraphOpen = false;
+      if(node.value === 'Sh' || node.value === 'SH') {
+        result += this.closeAllTags(this.buffer.openTags);
       }
 
       var f = this.macros[node.value] || function () {
@@ -2641,6 +2678,41 @@ HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, conte
   while(content[++i]) {
     currentTag = currentTag === firstTag ? secondTag : firstTag;
     result += this.generateTag(currentTag, content[i]);
+  }
+
+  return result;
+};
+
+/**
+ * Create HTML markup to close a specific tag
+ *
+ * @argument {string} tag name of the tag
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeTag = function(tag) {
+  return '</' + tag + '>';
+};
+
+/**
+ * Create HTML markup to close a list of tags
+ *
+ * @argument {array} tags
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeAllTags = function(tags) {
+  var result = '',
+    tag;
+
+  while((tag = tags.shift())) {
+    result += this.closeTag(tag);
   }
 
   return result;

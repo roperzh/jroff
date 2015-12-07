@@ -68,7 +68,15 @@ var Parser = function (input) {
     { state: TEXT,    input: COMMENT, action: 'ignore'       },
     { state: TEXT,    input: TEXT,    action: 'concatenate'  },
     { state: TEXT,    input: BREAK,   action: 'stop'         },
-    { state: TEXT,    input: IMACRO,  action: 'addInline'    }
+    { state: TEXT,    input: IMACRO,  action: 'addInline'    },
+    { state: TEXT,    input: ESCAPE,  action: 'startScape'   },
+
+    // ESCAPE mappings
+    { state: ESCAPE,  input: TEXT,    action: 'addEscape'     },
+    { state: ESCAPE,  input: IMACRO,  action: 'addEscape'     },
+    { state: ESCAPE,  input: COMMENT, action: 'ignore'       },
+    { state: ESCAPE,  input: BREAK,   action: 'ignore'       },
+    { state: ESCAPE,  input: '*',     action: 'defaultError' },
   ];
 
   /* beautify ignore:end */
@@ -122,6 +130,17 @@ var Parser = function (input) {
   };
 
   this.initMappings();
+};
+
+Parser.prototype.startScape = function(token) {
+  debugger
+};
+
+Parser.prototype.addEscape = function (token) {
+  this.state = TEXT;
+debugger
+  // this.lastTok()
+  //   .addSubNode(token);
 };
 
 Parser.prototype.addImacro = function (token) {

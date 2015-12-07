@@ -42,6 +42,8 @@ TokenFactory.prototype.create = function (rawToken) {
     kind = IMACRO;
   } else if(Token.isEmptyLine(rawToken)) {
     kind = BREAK;
+  } else if(Token.isEscape(rawToken)) {
+    kind = ESCAPE;
   }
 
   return new Token(rawToken, kind);
