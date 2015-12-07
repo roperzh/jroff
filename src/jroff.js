@@ -28,7 +28,8 @@ var patterns = {
   noWithespace: /\n|\S+/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
-  number: /[\d]/
+  number: /[\d]/,
+  escape: /\\\[.+|\\\(.{2}|\\.|/
 };
 
 /**
