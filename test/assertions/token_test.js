@@ -140,5 +140,13 @@ describe('Token', function () {
         assert.ok(!jroff.Token.isEmptyLine('asdf'));
       });
     });
+
+    describe('#isEscape', function () {
+      it('returns true only if the given string starts with a backslash', function () {
+        assert.ok(jroff.Token.isEscape('\\fB'));
+        assert.ok(jroff.Token.isEscape('\\(xx'));
+        assert.ok(jroff.Token.isEscape('\\[xx xx xx'));
+      });
+    });
   });
 });

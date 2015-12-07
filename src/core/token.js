@@ -80,6 +80,20 @@ Token.isMacro = function (str) {
 };
 
 /**
+ * Class method used to know wheter a string represents a escape sequence
+ *
+ * @param {string} str
+ *
+ * @returns {boolean}
+ *
+ * @since 0.0.1
+ *
+ */
+Token.isEscape = function(str) {
+  return patterns.escape.test(str);
+};
+
+/**
  * Add a given token into the nodes array
  *
  * @param {Token} token

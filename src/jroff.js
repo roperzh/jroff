@@ -29,7 +29,7 @@ var patterns = {
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
-  escape: /\\\[.+|\\\(.{2}|\\.|/
+  escape: /\\./
 };
 
 /**
