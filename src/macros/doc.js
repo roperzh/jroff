@@ -575,7 +575,7 @@ macros.doc = {
    *
    */
   Pp: function () {
-    this.buffer.isParagraphOpen = true;
+    this.buffer.openTags.push('p');
 
     return '<p>';
   },

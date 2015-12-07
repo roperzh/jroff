@@ -19,6 +19,7 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
       indent: 8
     },
     lists: [],
+    openTags: [],
     section: ''
   };
 
@@ -31,9 +32,8 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
   return arr.reduce(function (result, node) {
     if(node.kind === MACRO || node.kind === IMACRO) {
 
-      if(this.buffer.isParagraphOpen && node.value === 'Sh') {
-        result += '</p>';
-        this.buffer.isParagraphOpen = false;
+      if(node.value === 'Sh' || node.value === 'SH') {
+        result += this.closeAllTags(this.buffer.openTags);
       }
 
       var f = this.macros[node.value] || function () {
@@ -118,6 +118,41 @@ HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, conte
   while(content[++i]) {
     currentTag = currentTag === firstTag ? secondTag : firstTag;
     result += this.generateTag(currentTag, content[i]);
+  }
+
+  return result;
+};
+
+/**
+ * Create HTML markup to close a specific tag
+ *
+ * @argument {string} tag name of the tag
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeTag = function(tag) {
+  return '</' + tag + '>';
+};
+
+/**
+ * Create HTML markup to close a list of tags
+ *
+ * @argument {array} tags
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeAllTags = function(tags) {
+  var result = '',
+    tag;
+
+  while((tag = tags.shift())) {
+    result += this.closeTag(tag);
   }
 
   return result;

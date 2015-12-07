@@ -50,3 +50,4 @@ require('./assertions/token_factory_test.js');
 require('./assertions/lexer_test.js');
 require('./assertions/doc_macros_test.js');
 require('./assertions/an_macros_test.js');
+require('./assertions/html_generator_test.js');
