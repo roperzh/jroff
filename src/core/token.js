@@ -89,8 +89,8 @@ Token.isMacro = function (str) {
  * @since 0.0.1
  *
  */
-Token.isEscape = function(str) {
-  return patterns.escape.test(str);
+Token.isEscape = function (str) {
+  return str.charAt(0) === '\\';
 };
 
 /**

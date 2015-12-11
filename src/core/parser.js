@@ -40,8 +40,8 @@ var Parser = function (input) {
   var mappings = [
 
     // COMMENT mappings
-    { state: COMMENT, input: '*',     action: 'ignore'       },
     { state: COMMENT, input: BREAK,   action: 'stop'         },
+    { state: COMMENT, input: '*',     action: 'ignore'       },
 
     // MACRO mappings
     { state: MACRO,   input: BREAK,   action: 'stop'         },
@@ -49,18 +49,21 @@ var Parser = function (input) {
     { state: MACRO,   input: IMACRO,  action: 'addInline'    },
     { state: MACRO,   input: COMMENT, action: 'ignore'       },
     { state: MACRO,   input: MACRO,   action: 'addText'      },
+    { state: MACRO,   input: ESCAPE,  action: 'startScape'   },
 
     // IMACRO mappings
     { state: IMACRO,  input: TEXT,    action: 'addImacro'    },
     { state: IMACRO,  input: IMACRO,  action: 'addImacro'    },
     { state: IMACRO,  input: COMMENT, action: 'ignore'       },
     { state: IMACRO,  input: BREAK,   action: 'ignore'       },
+    { state: IMACRO,  input: ESCAPE,  action: 'startScape'   },
     { state: IMACRO,  input: '*',     action: 'defaultError' },
 
     // BREAK mappings
     { state: BREAK,   input: MACRO,   action: 'startMacro'   },
     { state: BREAK,   input: BREAK,   action: 'addLineBreak' },
     { state: BREAK,   input: TEXT,    action: 'startText'    },
+    { state: BREAK,   input: ESCAPE,  action: 'startScape'   },
     { state: BREAK,   input: '*',     action: 'cleanBreak'   },
 
     // TEXT mappings
@@ -72,10 +75,12 @@ var Parser = function (input) {
     { state: TEXT,    input: ESCAPE,  action: 'startScape'   },
 
     // ESCAPE mappings
-    { state: ESCAPE,  input: TEXT,    action: 'addEscape'     },
-    { state: ESCAPE,  input: IMACRO,  action: 'addEscape'     },
+    { state: ESCAPE,  input: TEXT,    action: 'escapeText'   },
+    { state: ESCAPE,  input: IMACRO,  action: 'addInline'    },
+    { state: ESCAPE,  input: BREAK,   action: 'addEscape'    },
     { state: ESCAPE,  input: COMMENT, action: 'ignore'       },
-    { state: ESCAPE,  input: BREAK,   action: 'ignore'       },
+    { state: ESCAPE,  input: MACRO,   action: 'startMacro'   },
+    { state: ESCAPE,  input: ESCAPE,  action: 'startScape'   },
     { state: ESCAPE,  input: '*',     action: 'defaultError' },
   ];
 
@@ -137,11 +142,11 @@ Parser.prototype.startScape = function (token) {
   this.state = ESCAPE;
 };
 
-Parser.prototype.escapeText = function(token) {
+Parser.prototype.escapeText = function (token) {
   var escapeWithArguments = ['\\f', '\\s', '\\m', '\\('],
     lastToken = this.lastTok();
 
-  if (escapeWithArguments.indexOf(lastToken.value) !== -1) {
+  if(escapeWithArguments.indexOf(lastToken.value) !== -1) {
     lastToken.addNode(token);
   } else {
     this.startText(token);
@@ -149,7 +154,7 @@ Parser.prototype.escapeText = function(token) {
 
 };
 
-Parser.prototype.addEscape = function (token) {
+Parser.prototype.addEscape = function () {
   this.state = TEXT;
 };
 

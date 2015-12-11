@@ -10,16 +10,18 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
 
   parser = new Parser(source);
   ast = parser.buildAST();
-
   macroLib = macroLib || 'doc';
 
   this.macros = mergeObjects([macros.defaults, macros[macroLib]]);
   this.buffer = {
     style: {
-      indent: 8
+      indent: 8,
+      fontSize: 16
     },
+    references: [],
     lists: [],
     openTags: [],
+    fontModes: [],
     section: ''
   };
 
@@ -30,9 +32,10 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
   var partial;
 
   return arr.reduce(function (result, node) {
-    if(node.kind === MACRO || node.kind === IMACRO) {
+    if(node.kind === MACRO || node.kind === IMACRO || node.kind === ESCAPE) {
 
       if(node.value === 'Sh' || node.value === 'SH') {
+        result += this.closeAllTags(this.buffer.fontModes);
         result += this.closeAllTags(this.buffer.openTags);
       }
 
