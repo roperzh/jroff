@@ -19,12 +19,31 @@
  *
  */
 var Lexer = function (source) {
-  this.source = source.match(patterns.noWithespace);
+  this.source = this.cleanSource(source).match(patterns.noWithespace);
   this.tokens = [];
   this.sourceIdx = 0;
   this.col = 0;
   this.line = 1;
   this.factory = new TokenFactory();
+};
+
+/**
+ * Performs the following tasks to the source string:
+ * - Replaces < and > symbols with their HTML escape equivalents
+ * - Adds whitespaces between escape sequences
+ *
+ * @argument {string} source
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+Lexer.prototype.cleanSource = function(source) {
+  return source
+    .replace(patterns.escape, ' $1 ')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 };
 
 /**

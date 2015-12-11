@@ -19,6 +19,20 @@ describe('Lexer', function () {
     });
   });
 
+  describe('#cleanSource', function () {
+    it('adds whitespace between escape characters', function () {
+      var clean = this.lexer.cleanSource('[\\-\\-version]');
+
+      assert.equal(clean, '[ \\-  \\- version]');
+    });
+
+    it('replaces < and > characters with their HTML escape equivalents', function () {
+      var clean = this.lexer.cleanSource('<test>');
+
+      assert.equal(clean, '&lt;test&gt;');
+    });
+  });
+
   describe('#lex', function () {
     it('returns an array of token instances', function () {
       var allTokens = this.lexer.lex()
