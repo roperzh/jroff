@@ -441,6 +441,7 @@
     this.idx = 0;
     this.state = BREAK;
     this.buffer = {};
+    this.escapeWithArguments = ['\\f', '\\s', '\\m', '\\('];
 
     /* beautify ignore:start */
 
@@ -550,10 +551,9 @@
   };
 
   Parser.prototype.escapeText = function (token) {
-    var escapeWithArguments = ['\\f', '\\s', '\\m', '\\('],
-      lastToken = this.lastTok();
+    var lastToken = this.lastTok();
 
-    if(escapeWithArguments.indexOf(lastToken.value) !== -1) {
+    if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
       lastToken.addNode(token);
     } else {
       this.startText(token);
@@ -2686,7 +2686,7 @@
         }
 
         var f = this.macros[node.value] || function () {
-          console.warn('warn: undefined macro ' + node.value);
+          // console.warn('warn: undefined macro ' + node.value);
           return node.value;
         };
 
