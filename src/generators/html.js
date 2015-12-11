@@ -40,7 +40,6 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       }
 
       var f = this.macros[node.value] || function () {
-        console.warn('warn: undefined macro ' + node.value);
         return node.value;
       };
 
