@@ -55,200 +55,220 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  in: function(indent) {
+  in : function (indent) {
+    indent = indent || 3;
 
-  },
+    this.buffer.openTags.push('section');
 
-  /**
-   * Set the scape character to the provided character
-   *
-   * @argument {string} character
-   *
-   * @since 0.0.1
-   *
-   */
-  ec: function(character) {
-
-  },
-
-  /**
-   * Turn off escape character mechanism
-   *
-   * @since 0.0.1
-   *
-   */
-  eo: function() {
-
+    return '<section style="margin-left:' + (indent / 3) + 'em;">';
   },
 
   /**
    * Italize the next `n` input lines
    *
+   * In this implementation, the macro starts the italic mode, without
+   * taking in consideration the number of lines provided.
+   *
    * @since 0.0.1
    *
    */
-  ul: function(numberOfLines) {
-
+  ul: function () {
+    return macros.defaults.ft.call(this, 'I');
   },
 
   /**
    * Italize the next `n` input lines
    *
+   * In this implementation, the macro starts the italic mode, without
+   * taking in consideration the number of lines provided.
+   *
    * @since 0.0.1
    *
    */
-  cu: function(numberOfLines) {
-
+  cu: function () {
+    return macros.defaults.ft.call(this, 'I');
   },
 
   /**
-   * \ prevents or delays the interpretation of \
+   * Set the vertical spacing of the following paragraphs
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
    *
    */
-  '\\': function() {
+  sp: function(spacing) {
+    spacing = spacing || '2';
 
+    this.buffer.openTags.push('section');
+
+    return '<section style="margin-top:' + spacing + 'em;">';
   },
 
   /**
-   * Printable version of the current escape character.
+   * Set the vertical spacing of the following paragraphs
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
    *
    */
-  '\e': function() {
-
+  nf: function() {
+    return '';
   },
 
   /**
-   * ´ (acute accent); equivalent to \(aa
+   * Used 
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
    *
    */
-  '\’': function() {
-
+  'if': function() {
+    return '';
   },
 
   /**
-   * ` (grave accent); equivalent to \(ga
+   * Prevents or delays the interpretation of \, in this implementation
+   * behaves exactly like `\e`
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
    *
    */
-  '\‘': function() {
-
+  '\\\\': function (text) {
+    return macros.defaults['\\e'].call(this);
   },
 
   /**
-   * - Minus sign in the current font
+   * Print the escape character
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
    *
    */
-  '\-': function() {
-
+  '\\e': function () {
+    return '\\ '
   },
 
   /**
-   * Period (dot) (see de)
+   * Print the minus sign (-) in the current font
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
    *
    */
-  '\.': function() {
-
+  '\\-': function () {
+    return '&minus; ';
   },
 
   /**
-   * Unpaddable space-size space character
+   * \fx Change to font named x, works as a shorthand of .ft
+   *
+   * @argument {string} args the word next to the escape sequence, due to the
+   * current parser structure we must split the font type argument of the
+   * escape secuence here.
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
+   */
+  '\\f': function (args) {
+    var fontType = args.charAt(0);
+
+    return macros.defaults.ft.call(this, fontType) + ' ' + args.slice(1);
+  },
+
+  /**
+   * According to the roff spec, this sequence is used as a
+   * "non-printing, zero width character", but for the purposes of this
+   * implementation we can just ignore this behavior.
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
    *
    */
-  '\space': function() {
-
+  '\\&': function() {
+    return '';
   },
 
   /**
-   * Digit width space
+   * Increase or decrease the font size by `n` units, negative values are
+   * accepted.
+   *
+   * @argument {string} args the word next to the escape sequence, due to the
+   * current parser structure we need to do extra work here to parse the
+   * arguments
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
    *
    */
-  '\0': function() {
+  '\\s': function(args) {
+    var txt;
 
+    args = args.split(patterns.realNumber);
+    txt = args[2];
+
+    this.buffer.style.fontSize += parseInt(args[1]);
+    this.buffer.openTags.push('span');
+
+    return(
+      '<span style="font-size:' + this.buffer.style.fontSize + 'px;">' + txt
+    );
   },
 
   /**
-   * 1/6 em narrow space character (zero width in nroff)
+   * For the purposes of this implementation we can just ignore this sequence.
    *
-   */
-  '\|': function() {
-
-  },
-
-  /**
-   * 1/12 em half-narrow space character (zero width in nroff)
-   */
-  '\^': function() {
-
-  },
-
-  /**
-   * Non-printing, zero width character
+   * @returns {string}
    *
+   * @since 0.0.1
+   +
    */
-  '\&': function() {
-
+  '\\m': function() {
+    return '';
   },
 
   /**
-   * Transparent line indicator
+   * For the purposes of this implementation we can just ignore this sequence.
    *
+   * @returns {string}
+   *
+   * @since 0.0.1
+   +
    */
-  '\!': function() {
-
+  '\\(': function() {
+    return '';
   },
 
   /**
-   * Beginning of comment; continues to end of line
+   * For the purposes of this implementation we can just ignore this sequence.
    *
+   * @returns {string}
+   *
+   * @since 0.0.1
+   +
    */
-  '\"': function() {
-
+  '\\d': function() {
+    return '';
   },
 
   /**
-   * Default optional hyphenation character
+   * For the purposes of this implementation we can just ignore this sequence.
    *
-   */
-  '\%': function() {
-
-  },
-
-  /**
-   * Character named xx
+   * @returns {string}
    *
+   * @since 0.0.1
+   +
    */
-   '\(xx': function() {
-
-   },
-
-   /**
-    * Non-interpreted leader character
-    *
-    */
-   '\a': function() {
-
-   },
-
-   /**
-    * \fN Change to font named x or xx, or position N
-    *
-    */
-   '\f': function() {
-
-   },
-
-   /**
-    * Non-interpreted horizontal tab
-    *
-    */
-   '\t': function() {
-
-   },
-
-   /**
-    * \w’string’ Width of string
-    *
-    */
-   '\w': function() {
-
-   }
+  '\\u': function() {
+    return '';
+  }
 };

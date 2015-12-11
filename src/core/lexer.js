@@ -67,11 +67,11 @@ Lexer.prototype.lex = function () {
 };
 
 /**
- * Deals with the management of the current token being parsed,
- * and of the state of the col and line variables.
+ * Manages the current token being parsed,
+ * and the state of this.col and this.line.
  *
- * @returns {string} the next lexeme in the source, when there is no
- * more lexemes it returns `undefined`
+ * @returns {string} the next lexeme in the source, if there is no
+ * more lexemes returns `undefined`
  *
  */
 Lexer.prototype.next = function () {

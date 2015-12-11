@@ -132,15 +132,25 @@ var Parser = function (input) {
   this.initMappings();
 };
 
-Parser.prototype.startScape = function(token) {
-  debugger
+Parser.prototype.startScape = function (token) {
+  this.ast.push(token);
+  this.state = ESCAPE;
+};
+
+Parser.prototype.escapeText = function(token) {
+  var escapeWithArguments = ['\\f', '\\s', '\\m', '\\('],
+    lastToken = this.lastTok();
+
+  if (escapeWithArguments.indexOf(lastToken.value) !== -1) {
+    lastToken.addNode(token);
+  } else {
+    this.startText(token);
+  }
+
 };
 
 Parser.prototype.addEscape = function (token) {
   this.state = TEXT;
-debugger
-  // this.lastTok()
-  //   .addSubNode(token);
 };
 
 Parser.prototype.addImacro = function (token) {
