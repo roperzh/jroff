@@ -237,8 +237,18 @@ macros.an = {
    * @since 0.0.1
    *
    */
-  P: function (args) {
-    return this.generateTag('p', args);
+  P: function () {
+    this.buffer.openTags.push('p');
+
+    return '<p>';
+  },
+
+  RS: function () {
+    return '<section style="margin-left:' + this.buffer.style.indent + '%">';
+  },
+
+  RE: function () {
+    return '</section>';
   }
 };
 

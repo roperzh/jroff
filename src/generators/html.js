@@ -136,7 +136,7 @@ HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, conte
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.closeTag = function(tag) {
+HTMLGenerator.prototype.closeTag = function (tag) {
   return '</' + tag + '>';
 };
 
@@ -150,7 +150,7 @@ HTMLGenerator.prototype.closeTag = function(tag) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.closeAllTags = function(tags) {
+HTMLGenerator.prototype.closeAllTags = function (tags) {
   var result = '',
     tag;
 

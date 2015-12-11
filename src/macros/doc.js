@@ -589,7 +589,7 @@ macros.doc = {
    *
    */
   Oo: function () {
-    return this.generateTag('span', '[');
+    return '[';
   },
 
   /**
@@ -601,7 +601,7 @@ macros.doc = {
    *
    */
   Oc: function () {
-    return this.generateTag('span', ']');
+    return ']';
   },
 
   /**

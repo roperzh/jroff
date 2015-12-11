@@ -19,7 +19,8 @@
  *
  */
 var Lexer = function (source) {
-  this.source = this.cleanSource(source).match(patterns.noWithespace);
+  this.source = this.cleanSource(source)
+    .match(patterns.noWithespace);
   this.tokens = [];
   this.sourceIdx = 0;
   this.col = 0;
@@ -39,7 +40,7 @@ var Lexer = function (source) {
  * @since 0.0.1
  *
  */
-Lexer.prototype.cleanSource = function(source) {
+Lexer.prototype.cleanSource = function (source) {
   return source
     .replace(patterns.escape, ' $1 ')
     .replace(/</g, '&lt;')

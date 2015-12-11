@@ -1,3 +1,10 @@
+var fontMappings = {
+  B: 'strong',
+  R: 'span',
+  I: 'i',
+  S: 'small'
+};
+
 macros.defaults = {
   /**
    * Adds a line break
@@ -18,8 +25,10 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  ss: function(number) {
+  ss: function (number) {
+    this.buffer.openTags.push('span');
 
+    return '<span style="word-spacing:' + (number / 36) + 'em;">';
   },
 
   /**
@@ -31,8 +40,16 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  ft: function(fontType) {
+  ft: function (fontType) {
+    var result = '',
+      type = fontMappings[fontType];
 
+    result += this.closeAllTags(this.buffer.fontModes);
+    result += '<' + type + '> ';
+
+    this.buffer.fontModes.push(type);
+
+    return result;
   },
 
   /**
@@ -43,8 +60,12 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  vs: function(spacing) {
+  vs: function (spacing) {
+    spacing = spacing || 12;
 
+    this.buffer.openTags.push('span');
+
+    return '<span style="line-height:' + (spacing / 12) + 'em;">';
   },
 
   /**
@@ -97,7 +118,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  sp: function(spacing) {
+  sp: function (spacing) {
     spacing = spacing || '2';
 
     this.buffer.openTags.push('section');
@@ -113,7 +134,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  nf: function() {
+  nf: function () {
     return '';
   },
 
@@ -125,7 +146,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  'if': function() {
+  'if': function () {
     return '';
   },
 
@@ -138,7 +159,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  '\\\\': function (text) {
+  '\\\\': function () {
     return macros.defaults['\\e'].call(this);
   },
 
@@ -151,7 +172,7 @@ macros.defaults = {
    *
    */
   '\\e': function () {
-    return '\\ '
+    return '\\ ';
   },
 
   /**
@@ -193,7 +214,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  '\\&': function() {
+  '\\&': function () {
     return '';
   },
 
@@ -210,7 +231,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  '\\s': function(args) {
+  '\\s': function (args) {
     var txt;
 
     args = args.split(patterns.realNumber);
@@ -232,7 +253,7 @@ macros.defaults = {
    * @since 0.0.1
    +
    */
-  '\\m': function() {
+  '\\m': function () {
     return '';
   },
 
@@ -244,7 +265,7 @@ macros.defaults = {
    * @since 0.0.1
    +
    */
-  '\\(': function() {
+  '\\(': function () {
     return '';
   },
 
@@ -256,7 +277,7 @@ macros.defaults = {
    * @since 0.0.1
    +
    */
-  '\\d': function() {
+  '\\d': function () {
     return '';
   },
 
@@ -268,7 +289,7 @@ macros.defaults = {
    * @since 0.0.1
    +
    */
-  '\\u': function() {
+  '\\u': function () {
     return '';
   }
 };
