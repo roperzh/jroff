@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <script src="../../dist/jroff.js"></script>
+
+    <style type="text/css">
+      *, *:before, *:after {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .column {
+        float: left;
+        margin: 15px;
+      }
+
+      .column-full {
+        width: 90%;
+      }
+
+      .column-half {
+        width: calc(50% - 30px);
+      }
+
+      h4 {
+        display: inline-block;
+        padding: 3px 8px;
+        margin: 5px 0 15px;
+        color: #FFFFFF;
+        font-family: sans-serif;
+        background: #222222;
+      }
+
+      textarea {
+        display: block;
+      }
+
+      strong {
+        font-style: 18px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="column column-full">
+      <h4>Live editor</h4>
+      <div>
+        <input id="rgxp" autofocus type="text"></input>
+        <input id="flags" type="text"></input>
+        <textarea id="content" cols="50" rows="10">
+.TH "GIT" "1" "10/05/2015" "Git 2\&.6\&.1" "Git Manual"
+.SH "NAME"
+git the stupid content tracker
+.SH "SYNOPSIS"
+.sp
+.nf
+\fIgit\fR [\-\-version] [\-\-help] [\-C <path>] [\-c <name>=<value>]
+    [\-\-exec\-path[=<path>]] [\-\-html\-path] [\-\-man\-path] [\-\-info\-path]
+    [\-p|\-\-paginate|\-\-no\-pager] [\-\-no\-replace\-objects] [\-\-bare]
+    [\-\-git\-dir=<path>] [\-\-work\-tree=<path>] [\-\-namespace=<name>]
+    <command> [<args>]
+
+        </textarea>
+      </div>
+    </div>
+
+    <div class="column column-full">
+      <h4>Match</h4>
+      <pre id="match"></pre>
+
+      <h4>Split</h4>
+      <pre id="split"></pre>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var rgxp = document.getElementById('rgxp'),
+          text = document.getElementById('content'),
+          flags = document.getElementById('flags');
+
+
+        function onInput(e) {
+          var flgs = flags.value,
+            reg = new RegExp(rgxp.value, flgs),
+            txt = text.value;
+
+          document.getElementById('match').innerHTML = printArray(txt.match(reg));
+          document.getElementById('split').innerHTML = printArray(txt.split(reg));
+        };
+
+        function printArray(arr) {
+          if (arr) {
+            return arr.join('<strong> &Vert; </strong>');
+          }
+        };
+
+        rgxp.oninput = onInput;
+        text.oninput = onInput;
+        flags.oninput = onInput;
+      });
+    </script>
+  </body>
+</html>
