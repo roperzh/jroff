@@ -34,6 +34,7 @@ var Parser = function (input) {
   this.idx = 0;
   this.state = BREAK;
   this.buffer = {};
+  this.escapeWithArguments = ['\\f', '\\s', '\\m', '\\('];
 
   /* beautify ignore:start */
 
@@ -143,10 +144,9 @@ Parser.prototype.startScape = function (token) {
 };
 
 Parser.prototype.escapeText = function (token) {
-  var escapeWithArguments = ['\\f', '\\s', '\\m', '\\('],
-    lastToken = this.lastTok();
+  var lastToken = this.lastTok();
 
-  if(escapeWithArguments.indexOf(lastToken.value) !== -1) {
+  if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
     lastToken.addNode(token);
   } else {
     this.startText(token);
