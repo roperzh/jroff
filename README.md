@@ -97,17 +97,42 @@ make doc
 open docs/index.html
 ```
 
+### Benchmarks
+
+Running benchmarks is complicated, and even more complicated in this specific
+case since there aren't other libraries to use as a reference and compare
+the results.
+
+In consequence the idea of this benchmarks is to compare different versions
+of the library against three arbitrary man pages: `Git`, `Node.js`
+and `Ruby`.
+
+This benchmark should be used only as an estimative comparation between
+versions or complex features.
+
+If you want to run the benchmarks and compare with the latest stored results:
+
+```console
+make bench
+```
+
+Alternatively you can store the results of the current benchmark in the
+cache file (`benchmarks/benchmarks.json`) with the `-s` flag:
+
+```console
+make bench flags='-s'
+```
 ### TODOs
 
-- [ ] Performance measures ( https://github.com/bestiejs/benchmark.js )
+- [x] Performance measures ( https://github.com/bestiejs/benchmark.js )
 - [x] Finish the contributing section
 - [ ] Add instructions to define new macros
 - [x] Create a logo (?
 - [ ] Clean up the code
-- [ ] Add black box tests
+- [x] Add black box tests
 - [ ] Finish unit tests
 - [x] Fix issues with the parser
-- [ ] Add missing macros
+- [x] Add missing macros
 - [ ] Clarify that we do not intend to copy the behavior of groff_html
 - [ ] Documentation
   - [x] Implement a build system to document pages
@@ -117,7 +142,7 @@ open docs/index.html
 - [ ] Review the README
 - [x] Better way to send arguments to macro calls
 - [x] Add CI integration
-- [ ] Handle scape characters
+- [x] Handle scape characters
 - [ ] Add support for nested numeric lists
 - [ ] Add support for `-compact` and `-width` arguments in lists
 

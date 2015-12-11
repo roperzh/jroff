@@ -55,6 +55,10 @@ doc-build: doc
 	git push origin gh-pages
 	git checkout master
 
+bench: build
+	$(notify_task)
+	node benchmarks/benchmark.js $(flags)
+
 .PHONY: test
 
 define notify_task
