@@ -31,7 +31,8 @@ var patterns = {
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
-  escape: /(\\[^\"])/g
+  escape: /(\\[^\"])/g,
+  wrappingQuotes: /^\"(.*)\"$/g
 };
 
 /**

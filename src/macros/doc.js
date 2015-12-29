@@ -256,8 +256,6 @@ macros.doc = {
   Cd: function (args) {
     var tag = this.isInsideOfSection('SYNOPSIS') ? 'p>strong' : 'strong';
 
-    args = args.replace(/"/g, '');
-
     return this.generateTag(tag, args);
   },
 
@@ -1396,8 +1394,7 @@ macros.doc = {
    *
    */
   Fc: function () {
-    var args = this.buffer.functionArgs.join(', ')
-      .replace(/\"/g, ''),
+    var args = this.buffer.functionArgs.join(', '),
       callParams = this.buffer.functionName + ' "' + args + '"';
 
     return macros.doc.Fn.call(this, callParams);

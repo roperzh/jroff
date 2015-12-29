@@ -48,7 +48,7 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       result += partial || '';
 
     } else {
-      result += node.value;
+      result += node.value.replace(patterns.wrappingQuotes, '$1');
     }
 
     return result;
