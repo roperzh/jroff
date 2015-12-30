@@ -76,7 +76,8 @@ var mergeObjects = function (objects) {
   }, {});
 };
 
-var macros = {};
+var macros = {},
+  macroLib = null;
 
 /**
  * Represents a single token, encapsulates common behavior useful
@@ -142,7 +143,7 @@ Token.isEmptyLine = function (str) {
  *
  */
 Token.isInlineMacro = function (str) {
-  return callableMacros.indexOf(str) !== -1;
+  return callableMacros.indexOf(str) !== -1 && macroLib === 'doc';
 };
 
 /**
@@ -547,7 +548,7 @@ var Parser = function (input) {
   this.initMappings();
 };
 
-Parser.prototype.macroEscape = function(token) {
+Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
   this.lastTok()
     .addSubNode(token);
@@ -1058,7 +1059,7 @@ macros.defaults = {
   },
 
   /**
-   * Used to manage conditionals, not supported at this moment
+   * Used to manage conditionals, not supported in the current version
    *
    * @argument {string} spacing
    *
@@ -1066,6 +1067,30 @@ macros.defaults = {
    *
    */
   'if': function () {
+    return '';
+  },
+
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  ie: function () {
+    return '';
+  },
+
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  el: function () {
     return '';
   },
 
@@ -2651,7 +2676,7 @@ macros.doc = {
 
 var HTMLGenerator = function () {};
 
-HTMLGenerator.prototype.generate = function (source, macroLib) {
+HTMLGenerator.prototype.generate = function (source, lib) {
   var parser,
     ast;
 
@@ -2661,9 +2686,11 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
 
   parser = new Parser(source);
   ast = parser.buildAST();
-  macroLib = macroLib || 'doc';
+  lib = lib || 'doc';
 
-  this.macros = mergeObjects([macros.defaults, macros[macroLib]]);
+  this.macros = mergeObjects([macros.defaults, macros[lib]]);
+  macroLib = lib;
+
   this.buffer = {
     style: {
       indent: 8,
@@ -2720,7 +2747,7 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.cleanQuotes = function(str) {
+HTMLGenerator.prototype.cleanQuotes = function (str) {
   return str.replace(patterns.wrappingQuotes, '$1');
 };
 
