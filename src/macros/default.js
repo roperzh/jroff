@@ -139,7 +139,7 @@ macros.defaults = {
   },
 
   /**
-   * Used to manage conditionals, not supported at this moment
+   * Used to manage conditionals, not supported in the current version
    *
    * @argument {string} spacing
    *
@@ -147,6 +147,30 @@ macros.defaults = {
    *
    */
   'if': function () {
+    return '';
+  },
+
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  ie: function () {
+    return '';
+  },
+
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  el: function () {
     return '';
   },
 
