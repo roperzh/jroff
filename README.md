@@ -145,6 +145,7 @@ make bench flags='-s'
 - [x] Handle scape characters
 - [ ] Add support for nested numeric lists
 - [ ] Add support for `-compact` and `-width` arguments in lists
+- [ ] Make clear when the code is using a global variable
 
 ### Links
 
