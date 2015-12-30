@@ -139,7 +139,7 @@ macros.defaults = {
   },
 
   /**
-   * Used 
+   * Used to manage conditionals, not supported at this moment
    *
    * @argument {string} spacing
    *
