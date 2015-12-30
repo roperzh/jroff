@@ -32,7 +32,7 @@ var patterns = {
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
   escape: /(\\[^\"])/g,
-  wrappingQuotes: /^\"(.*)\"$/g
+  wrappingQuotes: /^\"([^\"]*)\"$/g
 };
 
 /**
