@@ -138,7 +138,7 @@ var Parser = function (input) {
   this.initMappings();
 };
 
-Parser.prototype.macroEscape = function(token) {
+Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
   this.lastTok()
     .addSubNode(token);

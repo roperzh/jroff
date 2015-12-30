@@ -1,6 +1,6 @@
 var HTMLGenerator = function () {};
 
-HTMLGenerator.prototype.generate = function (source, macroLib) {
+HTMLGenerator.prototype.generate = function (source, lib) {
   var parser,
     ast;
 
@@ -71,7 +71,7 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.cleanQuotes = function(str) {
+HTMLGenerator.prototype.cleanQuotes = function (str) {
   return str.replace(patterns.wrappingQuotes, '$1');
 };
 
