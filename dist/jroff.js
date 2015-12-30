@@ -50,7 +50,7 @@ var patterns = {
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
   escape: /(\\[^\"])/g,
-  wrappingQuotes: /^\"(.*)\"$/g
+  wrappingQuotes: /^\"([^\"]*)\"$/g
 };
 
 /**
@@ -450,48 +450,48 @@ var Parser = function (input) {
   var mappings = [
 
     // COMMENT mappings
-    { state: COMMENT, input: BREAK,   action: 'stop'         },
-    { state: COMMENT, input: '*',     action: 'ignore'       },
+    { state: COMMENT, input: BREAK,   action: 'stop'               },
+    { state: COMMENT, input: '*',     action: 'ignore'             },
 
     // MACRO mappings
-    { state: MACRO,   input: BREAK,   action: 'stop'         },
-    { state: MACRO,   input: TEXT,    action: 'addText'      },
-    { state: MACRO,   input: IMACRO,  action: 'addInline'    },
-    { state: MACRO,   input: COMMENT, action: 'ignore'       },
-    { state: MACRO,   input: MACRO,   action: 'addText'      },
-    { state: MACRO,   input: ESCAPE,  action: 'startScape'   },
+    { state: MACRO,   input: BREAK,   action: 'stop'               },
+    { state: MACRO,   input: TEXT,    action: 'addText'            },
+    { state: MACRO,   input: IMACRO,  action: 'addInlineMacro'     },
+    { state: MACRO,   input: COMMENT, action: 'ignore'             },
+    { state: MACRO,   input: MACRO,   action: 'addText'            },
+    { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
 
     // IMACRO mappings
-    { state: IMACRO,  input: TEXT,    action: 'addImacro'    },
-    { state: IMACRO,  input: IMACRO,  action: 'addImacro'    },
-    { state: IMACRO,  input: COMMENT, action: 'ignore'       },
-    { state: IMACRO,  input: BREAK,   action: 'ignore'       },
-    { state: IMACRO,  input: ESCAPE,  action: 'startScape'   },
-    { state: IMACRO,  input: '*',     action: 'defaultError' },
+    { state: IMACRO,  input: TEXT,    action: 'addImacro'          },
+    { state: IMACRO,  input: IMACRO,  action: 'addImacro'          },
+    { state: IMACRO,  input: COMMENT, action: 'ignore'             },
+    { state: IMACRO,  input: BREAK,   action: 'ignore'             },
+    { state: IMACRO,  input: ESCAPE,  action: 'startEscape'        },
+    { state: IMACRO,  input: '*',     action: 'defaultError'       },
 
     // BREAK mappings
-    { state: BREAK,   input: MACRO,   action: 'startMacro'   },
-    { state: BREAK,   input: BREAK,   action: 'addLineBreak' },
-    { state: BREAK,   input: TEXT,    action: 'startText'    },
-    { state: BREAK,   input: ESCAPE,  action: 'startScape'   },
-    { state: BREAK,   input: '*',     action: 'cleanBreak'   },
+    { state: BREAK,   input: MACRO,   action: 'startMacro'         },
+    { state: BREAK,   input: BREAK,   action: 'addLineBreak'       },
+    { state: BREAK,   input: TEXT,    action: 'startText'          },
+    { state: BREAK,   input: ESCAPE,  action: 'startEscape'        },
+    { state: BREAK,   input: '*',     action: 'cleanBreak'         },
 
     // TEXT mappings
-    { state: TEXT,    input: MACRO,   action: 'concatenate'  },
-    { state: TEXT,    input: COMMENT, action: 'ignore'       },
-    { state: TEXT,    input: TEXT,    action: 'concatenate'  },
-    { state: TEXT,    input: BREAK,   action: 'stop'         },
-    { state: TEXT,    input: IMACRO,  action: 'addInline'    },
-    { state: TEXT,    input: ESCAPE,  action: 'startScape'   },
+    { state: TEXT,    input: MACRO,   action: 'concatenate'        },
+    { state: TEXT,    input: COMMENT, action: 'ignore'             },
+    { state: TEXT,    input: TEXT,    action: 'concatenate'        },
+    { state: TEXT,    input: BREAK,   action: 'stop'               },
+    { state: TEXT,    input: IMACRO,  action: 'addInlineMacro'     },
+    { state: TEXT,    input: ESCAPE,  action: 'startEscape'        },
 
     // ESCAPE mappings
-    { state: ESCAPE,  input: TEXT,    action: 'escapeText'   },
-    { state: ESCAPE,  input: IMACRO,  action: 'addInline'    },
-    { state: ESCAPE,  input: BREAK,   action: 'addEscape'    },
-    { state: ESCAPE,  input: COMMENT, action: 'ignore'       },
-    { state: ESCAPE,  input: MACRO,   action: 'startMacro'   },
-    { state: ESCAPE,  input: ESCAPE,  action: 'startScape'   },
-    { state: ESCAPE,  input: '*',     action: 'defaultError' },
+    { state: ESCAPE,  input: TEXT,    action: 'escapeText'         },
+    { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
+    { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
+    { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
+    { state: ESCAPE,  input: MACRO,   action: 'startMacro'         },
+    { state: ESCAPE,  input: ESCAPE,  action: 'startEscape'        },
+    { state: ESCAPE,  input: '*',     action: 'defaultError'       }
   ];
 
   /* beautify ignore:end */
@@ -547,7 +547,13 @@ var Parser = function (input) {
   this.initMappings();
 };
 
-Parser.prototype.startScape = function (token) {
+Parser.prototype.macroEscape = function(token) {
+  this.state = MACRO;
+  this.lastTok()
+    .addSubNode(token);
+};
+
+Parser.prototype.startEscape = function (token) {
   this.ast.push(token);
   this.state = ESCAPE;
 };
@@ -573,7 +579,7 @@ Parser.prototype.addImacro = function (token) {
     .addSubNode(token);
 };
 
-Parser.prototype.addInline = function (token) {
+Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
   this.lastTok()
     .addNode(token);
@@ -1052,7 +1058,7 @@ macros.defaults = {
   },
 
   /**
-   * Used 
+   * Used to manage conditionals, not supported at this moment
    *
    * @argument {string} spacing
    *
@@ -1243,9 +1249,9 @@ var architectures = [
 ];
 
 var fontModes = {
-  emphasis: 'i',
-  literal: 'span',
-  symbolic: 'strong'
+  '-emphasis': 'i',
+  '-literal': 'span',
+  '-symbolic': 'strong'
 };
 
 var abbreviations = {
@@ -1703,46 +1709,46 @@ macros.doc = {
     list.isOpen = true;
 
     switch(list.kind) {
-    case 'bullet':
+    case '-bullet':
       tag = '&compfn;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'dash':
+    case '-dash':
       tag = '&minus;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'enum':
+    case '-enum':
       list.prevTag = list.prevTag || 1;
       tag = (list.prevTag++) + '.';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'item':
+    case '-item':
       tag = '';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'tag':
+    case '-tag':
       tag = args;
       tagStyles = 'display:block;margin-bottom:15px;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'hang':
+    case '-hang':
       tag = this.generateTag('i', args);
       tagStyles = 'width:8%;display:inline-block;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'ohang':
+    case '-ohang':
       tag = this.generateTag('strong', args);
       tagStyles = 'display:block;';
       contentStyles = 'margin-bottom:2%;display:inline-block';
       break;
 
-    case 'inset':
+    case '-inset':
       tag = this.generateTag('i', args);
       contentStyles = 'margin-bottom:2%;display:inline-block;';
       break;
@@ -2693,12 +2699,29 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       result += partial || '';
 
     } else {
-      result += node.value.replace(patterns.wrappingQuotes, '$1');
+      result += this.cleanQuotes(node.value);
     }
 
     return result;
 
   }.bind(this), '');
+};
+
+/**
+ * Remove wrapping double quotes from a string
+ *
+ * @param {string} str
+ *
+ * @returns {string} the given argument without wrapping quotes
+ *
+ * @example
+ * cleanQuotes('"Lorem Ipsum"'); //-> 'Lorem Ipsum'
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.cleanQuotes = function(str) {
+  return str.replace(patterns.wrappingQuotes, '$1');
 };
 
 /**
@@ -2821,8 +2844,8 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return arg.replace(/\"|-/g, '');
-  });
+    return this.cleanQuotes(arg);
+  }.bind(this));
 };
 
 /**
