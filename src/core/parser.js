@@ -41,48 +41,48 @@ var Parser = function (input) {
   var mappings = [
 
     // COMMENT mappings
-    { state: COMMENT, input: BREAK,   action: 'stop'         },
-    { state: COMMENT, input: '*',     action: 'ignore'       },
+    { state: COMMENT, input: BREAK,   action: 'stop'               },
+    { state: COMMENT, input: '*',     action: 'ignore'             },
 
     // MACRO mappings
-    { state: MACRO,   input: BREAK,   action: 'stop'         },
-    { state: MACRO,   input: TEXT,    action: 'addText'      },
-    { state: MACRO,   input: IMACRO,  action: 'addInline'    },
-    { state: MACRO,   input: COMMENT, action: 'ignore'       },
-    { state: MACRO,   input: MACRO,   action: 'addText'      },
-    { state: MACRO,   input: ESCAPE,  action: 'startScape'   },
+    { state: MACRO,   input: BREAK,   action: 'stop'               },
+    { state: MACRO,   input: TEXT,    action: 'addText'            },
+    { state: MACRO,   input: IMACRO,  action: 'addInlineMacro'     },
+    { state: MACRO,   input: COMMENT, action: 'ignore'             },
+    { state: MACRO,   input: MACRO,   action: 'addText'            },
+    { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
 
     // IMACRO mappings
-    { state: IMACRO,  input: TEXT,    action: 'addImacro'    },
-    { state: IMACRO,  input: IMACRO,  action: 'addImacro'    },
-    { state: IMACRO,  input: COMMENT, action: 'ignore'       },
-    { state: IMACRO,  input: BREAK,   action: 'ignore'       },
-    { state: IMACRO,  input: ESCAPE,  action: 'startScape'   },
-    { state: IMACRO,  input: '*',     action: 'defaultError' },
+    { state: IMACRO,  input: TEXT,    action: 'addImacro'          },
+    { state: IMACRO,  input: IMACRO,  action: 'addImacro'          },
+    { state: IMACRO,  input: COMMENT, action: 'ignore'             },
+    { state: IMACRO,  input: BREAK,   action: 'ignore'             },
+    { state: IMACRO,  input: ESCAPE,  action: 'startEscape'        },
+    { state: IMACRO,  input: '*',     action: 'defaultError'       },
 
     // BREAK mappings
-    { state: BREAK,   input: MACRO,   action: 'startMacro'   },
-    { state: BREAK,   input: BREAK,   action: 'addLineBreak' },
-    { state: BREAK,   input: TEXT,    action: 'startText'    },
-    { state: BREAK,   input: ESCAPE,  action: 'startScape'   },
-    { state: BREAK,   input: '*',     action: 'cleanBreak'   },
+    { state: BREAK,   input: MACRO,   action: 'startMacro'         },
+    { state: BREAK,   input: BREAK,   action: 'addLineBreak'       },
+    { state: BREAK,   input: TEXT,    action: 'startText'          },
+    { state: BREAK,   input: ESCAPE,  action: 'startEscape'        },
+    { state: BREAK,   input: '*',     action: 'cleanBreak'         },
 
     // TEXT mappings
-    { state: TEXT,    input: MACRO,   action: 'concatenate'  },
-    { state: TEXT,    input: COMMENT, action: 'ignore'       },
-    { state: TEXT,    input: TEXT,    action: 'concatenate'  },
-    { state: TEXT,    input: BREAK,   action: 'stop'         },
-    { state: TEXT,    input: IMACRO,  action: 'addInline'    },
-    { state: TEXT,    input: ESCAPE,  action: 'startScape'   },
+    { state: TEXT,    input: MACRO,   action: 'concatenate'        },
+    { state: TEXT,    input: COMMENT, action: 'ignore'             },
+    { state: TEXT,    input: TEXT,    action: 'concatenate'        },
+    { state: TEXT,    input: BREAK,   action: 'stop'               },
+    { state: TEXT,    input: IMACRO,  action: 'addInlineMacro'     },
+    { state: TEXT,    input: ESCAPE,  action: 'startEscape'        },
 
     // ESCAPE mappings
-    { state: ESCAPE,  input: TEXT,    action: 'escapeText'   },
-    { state: ESCAPE,  input: IMACRO,  action: 'addInline'    },
-    { state: ESCAPE,  input: BREAK,   action: 'addEscape'    },
-    { state: ESCAPE,  input: COMMENT, action: 'ignore'       },
-    { state: ESCAPE,  input: MACRO,   action: 'startMacro'   },
-    { state: ESCAPE,  input: ESCAPE,  action: 'startScape'   },
-    { state: ESCAPE,  input: '*',     action: 'defaultError' },
+    { state: ESCAPE,  input: TEXT,    action: 'escapeText'         },
+    { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
+    { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
+    { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
+    { state: ESCAPE,  input: MACRO,   action: 'startMacro'         },
+    { state: ESCAPE,  input: ESCAPE,  action: 'startEscape'        },
+    { state: ESCAPE,  input: '*',     action: 'defaultError'       }
   ];
 
   /* beautify ignore:end */
@@ -138,7 +138,13 @@ var Parser = function (input) {
   this.initMappings();
 };
 
-Parser.prototype.startScape = function (token) {
+Parser.prototype.macroEscape = function(token) {
+  this.state = MACRO;
+  this.lastTok()
+    .addSubNode(token);
+};
+
+Parser.prototype.startEscape = function (token) {
   this.ast.push(token);
   this.state = ESCAPE;
 };
@@ -164,7 +170,7 @@ Parser.prototype.addImacro = function (token) {
     .addSubNode(token);
 };
 
-Parser.prototype.addInline = function (token) {
+Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
   this.lastTok()
     .addNode(token);
