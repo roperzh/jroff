@@ -29,4 +29,24 @@ describe('HTMLGenerator', function () {
       assert.equal(arr.length, 0);
     });
   });
+
+  describe('#cleanQuotes', function () {
+    it('removes wrapping double quotes from a given string', function () {
+      var result = this.generator.cleanQuotes('"Lorem Ipsum"');
+
+      assert.equal(result, 'Lorem Ipsum');
+    });
+
+    it('does not remove unmatching quotes', function () {
+      var result = this.generator.cleanQuotes('Lorem "Ipsum');
+
+      assert.equal(result, 'Lorem "Ipsum');
+    });
+
+    it('removes quotes only if they are wrapping the whole string', function () {
+      var result = this.generator.cleanQuotes('"Lorem" "Ipsum"');
+
+      assert.equal(result, '"Lorem" "Ipsum"');
+    });
+  });
 });

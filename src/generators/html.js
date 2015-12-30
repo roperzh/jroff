@@ -48,12 +48,29 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       result += partial || '';
 
     } else {
-      result += node.value.replace(patterns.wrappingQuotes, '$1');
+      result += this.cleanQuotes(node.value);
     }
 
     return result;
 
   }.bind(this), '');
+};
+
+/**
+ * Remove wrapping double quotes from a string
+ *
+ * @param {string} str
+ *
+ * @returns {string} the given argument without wrapping quotes
+ *
+ * @example
+ * cleanQuotes('"Lorem Ipsum"'); //-> 'Lorem Ipsum'
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.cleanQuotes = function(str) {
+  return str.replace(patterns.wrappingQuotes, '$1');
 };
 
 /**
