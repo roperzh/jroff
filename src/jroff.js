@@ -58,4 +58,5 @@ var mergeObjects = function (objects) {
   }, {});
 };
 
-var macros = {};
+var macros = {},
+  macroLib = null;

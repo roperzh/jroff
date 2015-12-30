@@ -10,9 +10,11 @@ HTMLGenerator.prototype.generate = function (source, macroLib) {
 
   parser = new Parser(source);
   ast = parser.buildAST();
-  macroLib = macroLib || 'doc';
+  lib = lib || 'doc';
 
-  this.macros = mergeObjects([macros.defaults, macros[macroLib]]);
+  this.macros = mergeObjects([macros.defaults, macros[lib]]);
+  macroLib = lib;
+
   this.buffer = {
     style: {
       indent: 8,

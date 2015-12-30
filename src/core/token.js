@@ -62,7 +62,7 @@ Token.isEmptyLine = function (str) {
  *
  */
 Token.isInlineMacro = function (str) {
-  return callableMacros.indexOf(str) !== -1;
+  return callableMacros.indexOf(str) !== -1 && macroLib === 'doc';
 };
 
 /**
