@@ -34,9 +34,9 @@ var architectures = [
 ];
 
 var fontModes = {
-  emphasis: 'i',
-  literal: 'span',
-  symbolic: 'strong'
+  '-emphasis': 'i',
+  '-literal': 'span',
+  '-symbolic': 'strong'
 };
 
 var abbreviations = {
@@ -494,46 +494,46 @@ macros.doc = {
     list.isOpen = true;
 
     switch(list.kind) {
-    case 'bullet':
+    case '-bullet':
       tag = '&compfn;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'dash':
+    case '-dash':
       tag = '&minus;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'enum':
+    case '-enum':
       list.prevTag = list.prevTag || 1;
       tag = (list.prevTag++) + '.';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'item':
+    case '-item':
       tag = '';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'tag':
+    case '-tag':
       tag = args;
       tagStyles = 'display:block;margin-bottom:15px;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'hang':
+    case '-hang':
       tag = this.generateTag('i', args);
       tagStyles = 'width:8%;display:inline-block;';
       contentStyles = 'margin-left:2%';
       break;
 
-    case 'ohang':
+    case '-ohang':
       tag = this.generateTag('strong', args);
       tagStyles = 'display:block;';
       contentStyles = 'margin-bottom:2%;display:inline-block';
       break;
 
-    case 'inset':
+    case '-inset':
       tag = this.generateTag('i', args);
       contentStyles = 'margin-bottom:2%;display:inline-block;';
       break;

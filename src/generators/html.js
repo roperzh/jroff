@@ -193,8 +193,8 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return arg.replace(/\"|-/g, '');
-  });
+    return this.cleanQuotes(arg);
+  }.bind(this));
 };
 
 /**
