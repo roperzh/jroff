@@ -1,0 +1,106 @@
+<!--
+  @it uses the correct default values if no parameters are specified
+
+  .TH
+-->
+<p>
+  <span>()</span>
+  <span></span>
+  <span>()</span>
+</p>
+
+<!--
+ @it uses the correct title param if provided
+
+  .TH FOO
+-->
+<p>
+  <span>FOO()</span>
+  <span></span>
+  <span>FOO()</span>
+</p>
+
+<!--
+  @it encloses the section number between parens if provided
+
+  .TH FOO 2
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span></span>
+  <span>FOO(2)</span>
+</p>
+
+<!--
+  @it encloses the section number in parens even if its an invalid number
+
+  .TH FOO bar
+-->
+
+<p>
+  <span>FOO(bar)</span>
+  <span></span>
+  <span>FOO(bar)</span>
+</p>
+
+<!--
+  @it does not print the date param in the header
+
+  .TH FOO 2 2003-03-02
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span></span>
+  <span>FOO(2)</span>
+</p>
+
+<!--
+  @it does not print the source param in the header
+
+  .TH FOO 2 2003-03-02 GNU
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span></span>
+  <span>FOO(2)</span>
+</p>
+
+<!--
+  @it prints the manual param in the header if provided
+
+  .TH FOO 2 2003-03-02 GNU Linux
+-->
+
+<p>
+  <span>FOO(2)</span>
+  <span>Linux</span>
+  <span>FOO(2)</span>
+</p>
+
+<!--
+  @it accepts multiple arguments wrapped in quotes
+
+
+  .TH "FOO BAR" 2 2003-03-02 GNU "Linux Programmer's Manual"
+-->
+
+<p>
+  <span>FOO BAR(2)</span>
+  <span>Linux Programmer's Manual</span>
+  <span>FOO BAR(2)</span>
+</p>
+
+<!--
+  @it accepts inline macros mixed in the parameters
+
+  .TH "GIT" "1" "10/05/2015" "Git 2\&.6\&.1" "Git Manual"
+-->
+
+<p>
+  <span>GIT(1)</span>
+  <span>Git Manual</span>
+  <span>GIT(1)</span>
+</p>
