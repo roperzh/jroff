@@ -45,9 +45,11 @@ macros.defaults = {
       type = fontMappings[fontType];
 
     result += this.closeAllTags(this.buffer.fontModes);
-    result += '<' + type + '> ';
 
-    this.buffer.fontModes.push(type);
+    if (type !== fontMappings.R) {
+      result += '<' + type + '> ';
+      this.buffer.fontModes.push(type);
+    }
 
     return result;
   },
