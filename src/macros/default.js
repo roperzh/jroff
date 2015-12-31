@@ -177,6 +177,28 @@ macros.defaults = {
   },
 
   /**
+   * Disable hyphenation
+   *
+   * @since 0.0.1
+   *
+   */
+  nh: function() {
+    /* TODO: apply this property somewhere */
+    this.buffer.style.hyphens = 'none';
+  },
+
+
+  /**
+   * Adjust output lines with mode c; where c = l, r, c, b,none
+   *
+   * @since 0.0.1
+   */
+  ad: function(align) {
+    /* TODO: apply this property somewhere */
+    this.buffer.style.textAlign = align;
+  },
+
+  /**
    * Prevents or delays the interpretation of \, in this implementation
    * behaves exactly like `\e`
    *
