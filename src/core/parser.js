@@ -153,14 +153,15 @@ Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTok();
 
   if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
+    token.value = token.value + ' ';
     lastToken.addNode(token);
   } else {
     this.startText(token);
   }
-
 };
 
-Parser.prototype.addEscape = function () {
+Parser.prototype.addEscape = function (token) {
+  this.ast.push(token);
   this.state = TEXT;
 };
 
