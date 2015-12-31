@@ -563,14 +563,15 @@ Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTok();
 
   if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
+    token.value = token.value + ' ';
     lastToken.addNode(token);
   } else {
     this.startText(token);
   }
-
 };
 
-Parser.prototype.addEscape = function () {
+Parser.prototype.addEscape = function (token) {
+  this.ast.push(token);
   this.state = TEXT;
 };
 
@@ -965,9 +966,11 @@ macros.defaults = {
       type = fontMappings[fontType];
 
     result += this.closeAllTags(this.buffer.fontModes);
-    result += '<' + type + '> ';
 
-    this.buffer.fontModes.push(type);
+    if (type !== fontMappings.R) {
+      result += '<' + type + '> ';
+      this.buffer.fontModes.push(type);
+    }
 
     return result;
   },
@@ -1092,6 +1095,28 @@ macros.defaults = {
    */
   el: function () {
     return '';
+  },
+
+  /**
+   * Disable hyphenation
+   *
+   * @since 0.0.1
+   *
+   */
+  nh: function() {
+    /* TODO: apply this property somewhere */
+    this.buffer.style.hyphens = 'none';
+  },
+
+
+  /**
+   * Adjust output lines with mode c; where c = l, r, c, b,none
+   *
+   * @since 0.0.1
+   */
+  ad: function(align) {
+    /* TODO: apply this property somewhere */
+    this.buffer.style.textAlign = align;
   },
 
   /**
