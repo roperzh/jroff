@@ -24,6 +24,7 @@ HTMLGenerator.prototype.generate = function (source, lib) {
     lists: [],
     openTags: [],
     fontModes: [],
+    sectionTags: [],
     section: ''
   };
 
@@ -169,11 +170,32 @@ HTMLGenerator.prototype.closeTag = function (tag) {
  *
  */
 HTMLGenerator.prototype.closeAllTags = function (tags) {
+  return this.closeTagsUntil('', tags);
+};
+
+/**
+ * Create HTML markup to close a list of tags until a given tag is
+ * reached
+ *
+ * @argument {string} limitTag to be reached, if empty it closes all
+ *
+ * @argument {array} tags
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeTagsUntil = function(limitTag, tags) {
   var result = '',
     tag;
 
-  while((tag = tags.shift())) {
+  while((tag = tags.pop())) {
     result += this.closeTag(tag);
+
+    if (tag === limitTag) {
+      break;
+    };
   }
 
   return result;

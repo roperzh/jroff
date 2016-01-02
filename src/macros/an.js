@@ -65,11 +65,18 @@ macros.an = {
    */
   SH: function (args) {
     var openingTag = '<section style="margin-left:' +
-      this.buffer.style.indent + '%;">';
+      this.buffer.style.indent + '%;">',
+      preamble = '';
 
     this.buffer.section = args;
 
-    return '</section>' + this.generateTag('h2', args) + openingTag;
+    preamble += this.closeAllTags(this.buffer.fontModes);
+    preamble += this.closeAllTags(this.buffer.openTags);
+    preamble += this.closeAllTags(this.buffer.sectionTags);
+
+    this.buffer.sectionTags.push('section');
+
+    return preamble + this.generateTag('h2', args) + openingTag;
   },
 
   /**
@@ -238,17 +245,27 @@ macros.an = {
    *
    */
   P: function () {
-    this.buffer.openTags.push('p');
+    var result = '';
 
-    return '<p>';
+    result += this.closeAllTags(this.buffer.fontModes);
+    result += this.closeTagsUntil('div', this.buffer.openTags);
+
+    this.buffer.openTags.push('div');
+
+    return result + '<div>';
   },
 
   RS: function () {
-    return '<section style="margin-left:' + this.buffer.style.indent + '%">';
+    var result = '';
+
+    result += this.closeAllTags(this.buffer.fontModes);
+    this.buffer.openTags.push('section');
+
+    return result += '<section style="margin-left:' + this.buffer.style.indent + '%">';
   },
 
   RE: function () {
-    return '</section>';
+    return this.closeTagsUntil('div', this.buffer.openTags);
   }
 };
 

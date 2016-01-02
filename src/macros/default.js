@@ -65,9 +65,21 @@ macros.defaults = {
   vs: function (spacing) {
     spacing = spacing || 12;
 
-    this.buffer.openTags.push('span');
+    this.buffer.openTags.push('section');
 
-    return '<span style="line-height:' + (spacing / 12) + 'em;">';
+    return '<section style="line-height:' + (spacing / 12) + 'em;">';
+  },
+
+  /**
+   * Set the vertical spacing of the following paragraphs
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  nf: function (spacing) {
+    return macros.defaults.vs.call(this, spacing);
   },
 
   /**
@@ -113,7 +125,12 @@ macros.defaults = {
   },
 
   /**
-   * Set the vertical spacing of the following paragraphs
+   * Space vertically in either direction.
+   *
+   * If `spacing` is negative, the motion is backward (upward) and is
+   * limited to the distance to the top of the page
+   *
+   * If the no-space mode is on, no spacing occurs (see ns and rs)
    *
    * @argument {string} spacing
    *
@@ -123,21 +140,9 @@ macros.defaults = {
   sp: function (spacing) {
     spacing = spacing || '2';
 
-    this.buffer.openTags.push('section');
+    // this.buffer.openTags.push('span');
 
-    return '<section style="margin-top:' + spacing + 'em;">';
-  },
-
-  /**
-   * Set the vertical spacing of the following paragraphs
-   *
-   * @argument {string} spacing
-   *
-   * @since 0.0.1
-   *
-   */
-  nf: function () {
-    return '';
+    return '<hr style="margin-top:' + spacing + 'em;visibility:hidden;">';
   },
 
   /**
@@ -173,6 +178,10 @@ macros.defaults = {
    *
    */
   el: function () {
+    return '';
+  },
+
+  '\\}': function() {
     return '';
   },
 
