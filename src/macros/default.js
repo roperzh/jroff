@@ -140,8 +140,6 @@ macros.defaults = {
   sp: function (spacing) {
     spacing = spacing || '2';
 
-    // this.buffer.openTags.push('span');
-
     return '<hr style="margin-top:' + spacing + 'em;visibility:hidden;">';
   },
 
