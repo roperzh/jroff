@@ -20,7 +20,7 @@
  */
 var Lexer = function (source) {
   this.source = this.cleanSource(source)
-    .match(patterns.noWithespace);
+    .split(patterns.noWithespace);
   this.tokens = [];
   this.sourceIdx = 0;
   this.col = 0;

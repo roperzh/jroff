@@ -157,7 +157,7 @@ Token.prototype.lastNode = function () {
  *
  */
 Token.prototype.mix = function (token) {
-  this.value = this.value + ' ' + token.value;
+  this.value = this.value + token.value;
 
   if(this.kind === EMPTY) {
     this.kind = token.kind;

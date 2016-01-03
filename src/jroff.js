@@ -26,7 +26,7 @@ var callableMacros = [
  */
 var patterns = {
   macro: /^\.[^\.]/,
-  noWithespace: /\n|\S+/g,
+  noWithespace: /(\n|\s+)/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,

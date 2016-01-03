@@ -239,7 +239,7 @@ macros.defaults = {
    *
    */
   '\\-': function () {
-    return '&minus; ';
+    return '&minus;';
   },
 
   /**
@@ -254,7 +254,10 @@ macros.defaults = {
    * @since 0.0.1
    */
   '\\f': function (args) {
-    var fontType = args.charAt(0);
+    var fontType;
+
+    args = args.trim();
+    fontType = args.charAt(0);
 
     return macros.defaults.ft.call(this, fontType) + ' ' + args.slice(1);
   },

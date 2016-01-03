@@ -153,7 +153,7 @@ Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTok();
 
   if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
-    token.value = token.value + ' ';
+    token.value = token.value;
     lastToken.addNode(token);
   } else {
     this.startText(token);
@@ -243,7 +243,6 @@ Parser.prototype.startMacro = function (token) {
 
 Parser.prototype.startText = function (token) {
   this.state = TEXT;
-  token.value = ' ' + token.value;
   this.ast.push(token);
 };
 
