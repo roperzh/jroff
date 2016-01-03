@@ -490,7 +490,7 @@ var Parser = function (input) {
     { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
     { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
     { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
-    { state: ESCAPE,  input: MACRO,   action: 'startMacro'         },
+    { state: ESCAPE,  input: MACRO,   action: 'escapeText'         },
     { state: ESCAPE,  input: ESCAPE,  action: 'startEscape'        },
     { state: ESCAPE,  input: '*',     action: 'defaultError'       }
   ];
@@ -572,7 +572,7 @@ Parser.prototype.escapeText = function (token) {
 
 Parser.prototype.addEscape = function (token) {
   this.ast.push(token);
-  this.state = TEXT;
+  this.state = BREAK;
 };
 
 Parser.prototype.addImacro = function (token) {
@@ -728,11 +728,18 @@ macros.an = {
    */
   SH: function (args) {
     var openingTag = '<section style="margin-left:' +
-      this.buffer.style.indent + '%;">';
+      this.buffer.style.indent + '%;">',
+      preamble = '';
 
     this.buffer.section = args;
 
-    return '</section>' + this.generateTag('h2', args) + openingTag;
+    preamble += this.closeAllTags(this.buffer.fontModes);
+    preamble += this.closeAllTags(this.buffer.openTags);
+    preamble += this.closeAllTags(this.buffer.sectionTags);
+
+    this.buffer.sectionTags.push('section');
+
+    return preamble + this.generateTag('h2', args) + openingTag;
   },
 
   /**
@@ -901,17 +908,27 @@ macros.an = {
    *
    */
   P: function () {
-    this.buffer.openTags.push('p');
+    var result = '';
 
-    return '<p>';
+    result += this.closeAllTags(this.buffer.fontModes);
+    result += this.closeTagsUntil('div', this.buffer.openTags);
+
+    this.buffer.openTags.push('div');
+
+    return result + '<div>';
   },
 
   RS: function () {
-    return '<section style="margin-left:' + this.buffer.style.indent + '%">';
+    var result = '';
+
+    result += this.closeAllTags(this.buffer.fontModes);
+    this.buffer.openTags.push('section');
+
+    return result += '<section style="margin-left:' + this.buffer.style.indent + '%">';
   },
 
   RE: function () {
-    return '</section>';
+    return this.closeTagsUntil('div', this.buffer.openTags);
   }
 };
 
@@ -986,9 +1003,21 @@ macros.defaults = {
   vs: function (spacing) {
     spacing = spacing || 12;
 
-    this.buffer.openTags.push('span');
+    this.buffer.openTags.push('section');
 
-    return '<span style="line-height:' + (spacing / 12) + 'em;">';
+    return '<section style="line-height:' + (spacing / 12) + 'em;">';
+  },
+
+  /**
+   * Set the vertical spacing of the following paragraphs
+   *
+   * @argument {string} spacing
+   *
+   * @since 0.0.1
+   *
+   */
+  nf: function (spacing) {
+    return macros.defaults.vs.call(this, spacing);
   },
 
   /**
@@ -1034,7 +1063,12 @@ macros.defaults = {
   },
 
   /**
-   * Set the vertical spacing of the following paragraphs
+   * Space vertically in either direction.
+   *
+   * If `spacing` is negative, the motion is backward (upward) and is
+   * limited to the distance to the top of the page
+   *
+   * If the no-space mode is on, no spacing occurs (see ns and rs)
    *
    * @argument {string} spacing
    *
@@ -1044,21 +1078,7 @@ macros.defaults = {
   sp: function (spacing) {
     spacing = spacing || '2';
 
-    this.buffer.openTags.push('section');
-
-    return '<section style="margin-top:' + spacing + 'em;">';
-  },
-
-  /**
-   * Set the vertical spacing of the following paragraphs
-   *
-   * @argument {string} spacing
-   *
-   * @since 0.0.1
-   *
-   */
-  nf: function () {
-    return '';
+    return '<hr style="margin-top:' + spacing + 'em;visibility:hidden;">';
   },
 
   /**
@@ -1094,6 +1114,10 @@ macros.defaults = {
    *
    */
   el: function () {
+    return '';
+  },
+
+  '\\}': function() {
     return '';
   },
 
@@ -2725,6 +2749,7 @@ HTMLGenerator.prototype.generate = function (source, lib) {
     lists: [],
     openTags: [],
     fontModes: [],
+    sectionTags: [],
     section: ''
   };
 
@@ -2870,11 +2895,32 @@ HTMLGenerator.prototype.closeTag = function (tag) {
  *
  */
 HTMLGenerator.prototype.closeAllTags = function (tags) {
+  return this.closeTagsUntil('', tags);
+};
+
+/**
+ * Create HTML markup to close a list of tags until a given tag is
+ * reached
+ *
+ * @argument {string} limitTag to be reached, if empty it closes all
+ *
+ * @argument {array} tags
+ *
+ * @returns {string}
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.closeTagsUntil = function(limitTag, tags) {
   var result = '',
     tag;
 
-  while((tag = tags.shift())) {
+  while((tag = tags.pop())) {
     result += this.closeTag(tag);
+
+    if (tag === limitTag) {
+      break;
+    };
   }
 
   return result;
