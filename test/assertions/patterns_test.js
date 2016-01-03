@@ -14,24 +14,17 @@ describe('patterns', function () {
       });
   });
 
-  describe('noWitheSpace', function () {
+  describe('lexeme', function () {
 
     before(function () {
-      this.validMatches = '  one two \n three'
-        .match(jroff.patterns.noWithespace);
-
-      this.invalidMatches = '   '
-        .match(jroff.patterns.noWithespace);
+      this.validMatches = 'one   two\n three'
+        .split(jroff.patterns.lexeme);
     });
 
-    it('matches any character except withespaces', function () {
+    it('splits an string into lexemes', function () {
       assert.ok(this.validMatches);
       assert.deepEqual(
-        this.validMatches, ['one', 'two', '\n', 'three']);
-    });
-
-    it('ignores strings with only withespaces', function () {
-      assert.equal(this.invalidMatches, null);
+        this.validMatches, ['one', '   ', 'two', '\n', '', ' ', 'three']);
     });
   });
 

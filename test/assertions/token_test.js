@@ -42,10 +42,11 @@ describe('Token', function () {
 
         assert.equal(tok.kind, this.token1.kind);
       });
+
       it('concatenates the .value attribute of each token', function () {
         var mixedToken = this.token1.mix(this.token2);
 
-        assert.equal(mixedToken.value, 'token 1 token 2');
+        assert.equal(mixedToken.value, 'token 1token 2');
         assert.equal(this.token1.value, mixedToken.value);
         assert.equal(this.token2.value, 'token 2');
       });
@@ -89,7 +90,7 @@ describe('Token', function () {
         this.token1.mixWithLastNode(this.token2);
 
         assert.equal(this.token1.lastNode()
-          .value, 'token 3 token 2');
+          .value, 'token 3token 2');
         assert.equal(this.token1.lastNode()
           .kind, jroff.TEXT);
       });

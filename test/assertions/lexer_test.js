@@ -3,17 +3,17 @@ var assert = require('assert'),
 
 describe('Lexer', function () {
   beforeEach(function () {
-    var source = '.TH TITLE \n .SH TEST';
+    var source = '.TH TITLE\n.SH  TEST';
 
     this.lexer = new jroff.Lexer(source);
   });
 
-  describe('instantiation', function () {
+  describe('instance', function () {
     it('splits the source by withespaces and newlines', function () {
-      assert.deepEqual(this.lexer.source, ['.TH', 'TITLE', '\n', '.SH', 'TEST']);
+      assert.deepEqual(this.lexer.source, ['.TH', ' ', 'TITLE', '\n', '.SH', '  ', 'TEST']);
     });
 
-    it('creates instance variables with useful values to track the current line and column', function () {
+    it('creates instance variables to track the current line and column', function () {
       assert.equal(this.lexer.col, 0);
       assert.equal(this.lexer.line, 1);
     });
@@ -50,7 +50,10 @@ describe('Lexer', function () {
       assert.equal(tokens[0].value, 'TH');
 
       assert.equal(tokens[1].kind, jroff.TEXT);
-      assert.equal(tokens[1].value, 'TITLE');
+      assert.equal(tokens[1].value, ' ');
+
+      assert.equal(tokens[2].kind, jroff.TEXT);
+      assert.equal(tokens[2].value, 'TITLE');
     });
   });
 
@@ -60,7 +63,7 @@ describe('Lexer', function () {
         second = this.lexer.next();
 
       assert.equal(first, '.TH');
-      assert.equal(second, 'TITLE');
+      assert.equal(second, ' ');
     });
 
     it('increases the value of sourceIdx on each call', function () {
@@ -76,7 +79,8 @@ describe('Lexer', function () {
       assert.equal(this.lexer.line, 1);
 
       this.lexer.next();
-      assert.equal(this.lexer.col, 8);
+      this.lexer.next();
+      assert.equal(this.lexer.col, 9);
       assert.equal(this.lexer.line, 1);
 
       this.lexer.next();
