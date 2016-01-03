@@ -169,7 +169,7 @@ Parser.prototype.addImacro = function (token) {
   // If the value of the token is a space character,
   // keep going until we find a valid argument
   // TODO: document this in a proper way
-  if (patterns.noWitheSpace.test(token.value)) {
+  if (patterns.noWhiteSpace.test(token.value)) {
     this.state = MACRO;
   };
 
