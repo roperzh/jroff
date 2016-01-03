@@ -60,7 +60,7 @@ Lexer.prototype.cleanSource = function (source) {
 Lexer.prototype.lex = function () {
   var lexeme;
 
-  while((lexeme = this.next())) {
+  while(typeof (lexeme = this.next()) !== 'undefined') {
     this.tokens.push(this.factory.create(lexeme));
   }
 
