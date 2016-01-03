@@ -217,7 +217,7 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return this.cleanQuotes(arg);
+    return this.cleanQuotes(arg).trim();
   }.bind(this));
 };
 

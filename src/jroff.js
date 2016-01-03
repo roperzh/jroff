@@ -26,13 +26,14 @@ var callableMacros = [
  */
 var patterns = {
   macro: /^\.[^\.]/,
-  noWithespace: /(\n|\s+)/g,
+  lexeme: /(\n|\s+)/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
   escape: /(\\[^\"])/g,
-  wrappingQuotes: /^\"([^\"]*)\"$/g
+  wrappingQuotes: /^\s*?\"([^\"]*)\"\s*?$/g,
+  noWitheSpace: /\S/
 };
 
 /**

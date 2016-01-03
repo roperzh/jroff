@@ -378,7 +378,7 @@ macros.doc = {
     var openingTag = '<section style="margin-left:' +
       this.buffer.style.indent + '%;">';
 
-    this.buffer.section = args;
+    this.buffer.section = args.trim();
 
     return '</section>' + this.generateTag('h2', args) + openingTag;
   },
@@ -954,8 +954,11 @@ macros.doc = {
    *
    */
   Bx: function (version) {
-    var base = 'BSD',
+    var base,
       out;
+
+    base = 'BSD';
+    version = version.trim();
 
     if(version === '-devel') {
       out = base + '(currently under development)';

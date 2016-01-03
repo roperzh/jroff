@@ -42,7 +42,7 @@ macros.defaults = {
    */
   ft: function (fontType) {
     var result = '',
-      type = fontMappings[fontType];
+      type = fontMappings[fontType.trim()];
 
     result += this.closeAllTags(this.buffer.fontModes);
 

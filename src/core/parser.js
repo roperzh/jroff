@@ -166,7 +166,13 @@ Parser.prototype.addEscape = function (token) {
 };
 
 Parser.prototype.addImacro = function (token) {
-  this.state = MACRO;
+  // If the value of the token is a space character,
+  // keep going until we find a valid argument
+  // TODO: document this in a proper way
+  if (patterns.noWitheSpace.test(token.value)) {
+    this.state = MACRO;
+  };
+
   this.lastTok()
     .addSubNode(token);
 };
