@@ -80,7 +80,7 @@ var Parser = function (input) {
     { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
     { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
     { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
-    { state: ESCAPE,  input: MACRO,   action: 'startMacro'         },
+    { state: ESCAPE,  input: MACRO,   action: 'escapeText'         },
     { state: ESCAPE,  input: ESCAPE,  action: 'startEscape'        },
     { state: ESCAPE,  input: '*',     action: 'defaultError'       }
   ];
@@ -162,7 +162,7 @@ Parser.prototype.escapeText = function (token) {
 
 Parser.prototype.addEscape = function (token) {
   this.ast.push(token);
-  this.state = TEXT;
+  this.state = BREAK;
 };
 
 Parser.prototype.addImacro = function (token) {
