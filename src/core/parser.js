@@ -135,6 +135,10 @@ var Parser = function (input) {
     return this.ast[this.ast.length - 1];
   };
 
+  this.isEscapeWithArguments = function(token) {
+    return this.escapeWithArguments.indexOf(token.value) !== -1;
+  };
+
   this.initMappings();
 };
 
@@ -151,10 +155,13 @@ Parser.prototype.startEscape = function (token) {
 
 Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTok();
-
-  if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
-    token.value = token.value;
+  if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
+
+    if (lastToken.lastNodeIsNotSpace()) {
+      this.startText(new Token(''));
+    };
+
   } else {
     this.startText(token);
   }

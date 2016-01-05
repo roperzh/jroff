@@ -185,3 +185,15 @@ Token.prototype.mixWithLastNode = function (token) {
 
   return this;
 };
+
+/**
+ * Checks if the last node stored in the current token
+ * is a whitespace sequence
+ *
+ * @returns {Boolean}
+ *
+ * @since 0.0.1
+ */
+Token.prototype.lastNodeIsNotSpace = function() {
+  return patterns.noWhiteSpace.test(this.lastNode().value);
+};

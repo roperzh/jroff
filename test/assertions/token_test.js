@@ -111,6 +111,24 @@ describe('Token', function () {
       });
     });
 
+    describe('#lastNodeIsNotSpace', function () {
+      it('returns false when the last node of the token is a whitespace', function () {
+        var token3 = new jroff.Token('  ', jroff.TEXT);
+
+        this.token1.addNode(token3);
+
+        assert.ok(!this.token1.lastNodeIsNotSpace());
+      });
+
+      it('returns true when the last node of the token is not a whitespace', function () {
+        var token3 = new jroff.Token('asf', jroff.TEXT);
+
+        this.token1.addNode(token3);
+
+        assert.ok(this.token1.lastNodeIsNotSpace());
+      });
+    });
+
   });
 
   describe('class methods', function () {
