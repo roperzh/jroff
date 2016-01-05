@@ -44,13 +44,14 @@ var callableMacros = [
  */
 var patterns = {
   macro: /^\.[^\.]/,
-  noWithespace: /\n|\S+/g,
+  lexeme: /(\n|\s+)/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
   escape: /(\\[^\"])/g,
-  wrappingQuotes: /^\"([^\"]*)\"$/g
+  wrappingQuotes: /^\s*?\"([^\"]*)\"\s*?$/g,
+  noWhiteSpace: /\S/
 };
 
 /**
@@ -238,7 +239,7 @@ Token.prototype.lastNode = function () {
  *
  */
 Token.prototype.mix = function (token) {
-  this.value = this.value + ' ' + token.value;
+  this.value = this.value + token.value;
 
   if(this.kind === EMPTY) {
     this.kind = token.kind;
@@ -265,6 +266,18 @@ Token.prototype.mixWithLastNode = function (token) {
     .mix(token);
 
   return this;
+};
+
+/**
+ * Checks if the last node stored in the current token
+ * is a whitespace sequence
+ *
+ * @returns {Boolean}
+ *
+ * @since 0.0.1
+ */
+Token.prototype.lastNodeIsNotSpace = function() {
+  return patterns.noWhiteSpace.test(this.lastNode().value);
 };
 
 /**
@@ -340,7 +353,7 @@ TokenFactory.prototype.create = function (rawToken) {
  */
 var Lexer = function (source) {
   this.source = this.cleanSource(source)
-    .match(patterns.noWithespace);
+    .split(patterns.lexeme);
   this.tokens = [];
   this.sourceIdx = 0;
   this.col = 0;
@@ -380,7 +393,7 @@ Lexer.prototype.cleanSource = function (source) {
 Lexer.prototype.lex = function () {
   var lexeme;
 
-  while((lexeme = this.next())) {
+  while(typeof (lexeme = this.next()) !== 'undefined') {
     this.tokens.push(this.factory.create(lexeme));
   }
 
@@ -545,6 +558,10 @@ var Parser = function (input) {
     return this.ast[this.ast.length - 1];
   };
 
+  this.isEscapeWithArguments = function(token) {
+    return this.escapeWithArguments.indexOf(token.value) !== -1;
+  };
+
   this.initMappings();
 };
 
@@ -561,10 +578,13 @@ Parser.prototype.startEscape = function (token) {
 
 Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTok();
-
-  if(this.escapeWithArguments.indexOf(lastToken.value) !== -1) {
-    token.value = token.value + ' ';
+  if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
+
+    if (lastToken.lastNodeIsNotSpace()) {
+      this.startText(new Token(''));
+    };
+
   } else {
     this.startText(token);
   }
@@ -576,7 +596,13 @@ Parser.prototype.addEscape = function (token) {
 };
 
 Parser.prototype.addImacro = function (token) {
-  this.state = MACRO;
+  // If the value of the token is a space character,
+  // keep going until we find a valid argument
+  // TODO: document this in a proper way
+  if (patterns.noWhiteSpace.test(token.value)) {
+    this.state = MACRO;
+  };
+
   this.lastTok()
     .addSubNode(token);
 };
@@ -653,7 +679,6 @@ Parser.prototype.startMacro = function (token) {
 
 Parser.prototype.startText = function (token) {
   this.state = TEXT;
-  token.value = ' ' + token.value;
   this.ast.push(token);
 };
 
@@ -980,7 +1005,7 @@ macros.defaults = {
    */
   ft: function (fontType) {
     var result = '',
-      type = fontMappings[fontType];
+      type = fontMappings[fontType.trim()];
 
     result += this.closeAllTags(this.buffer.fontModes);
 
@@ -1177,7 +1202,7 @@ macros.defaults = {
    *
    */
   '\\-': function () {
-    return '&minus; ';
+    return '&minus;';
   },
 
   /**
@@ -1192,7 +1217,10 @@ macros.defaults = {
    * @since 0.0.1
    */
   '\\f': function (args) {
-    var fontType = args.charAt(0);
+    var fontType;
+
+    args = args.trim();
+    fontType = args.charAt(0);
 
     return macros.defaults.ft.call(this, fontType) + ' ' + args.slice(1);
   },
@@ -1228,7 +1256,7 @@ macros.defaults = {
     var txt;
 
     args = args.split(patterns.realNumber);
-    txt = args[2];
+    txt = args[2] || '';
 
     this.buffer.style.fontSize += parseInt(args[1]);
     this.buffer.openTags.push('span');
@@ -1667,7 +1695,7 @@ macros.doc = {
     var openingTag = '<section style="margin-left:' +
       this.buffer.style.indent + '%;">';
 
-    this.buffer.section = args;
+    this.buffer.section = args.trim();
 
     return '</section>' + this.generateTag('h2', args) + openingTag;
   },
@@ -2243,8 +2271,11 @@ macros.doc = {
    *
    */
   Bx: function (version) {
-    var base = 'BSD',
+    var base,
       out;
+
+    base = 'BSD';
+    version = version.trim();
 
     if(version === '-devel') {
       out = base + '(currently under development)';
@@ -2942,7 +2973,7 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return this.cleanQuotes(arg);
+    return this.cleanQuotes(arg).trim();
   }.bind(this));
 };
 
