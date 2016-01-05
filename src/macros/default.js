@@ -293,7 +293,7 @@ macros.defaults = {
     var txt;
 
     args = args.split(patterns.realNumber);
-    txt = args[2];
+    txt = args[2] || '';
 
     this.buffer.style.fontSize += parseInt(args[1]);
     this.buffer.openTags.push('span');
