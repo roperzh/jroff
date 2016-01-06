@@ -31,6 +31,7 @@ var Parser = function (input) {
   this.lexer = new Lexer(input);
   this.tokens = this.lexer.lex();
   this.tokenslen = this.tokens.length;
+  this.lastParsedToken = null;
   this.idx = 0;
   this.state = BREAK;
   this.buffer = {};
@@ -53,10 +54,10 @@ var Parser = function (input) {
     { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
 
     // IMACRO mappings
-    { state: IMACRO,  input: TEXT,    action: 'addImacro'          },
+    { state: IMACRO,  input: TEXT,    action: 'imacroText'         },
     { state: IMACRO,  input: IMACRO,  action: 'addImacro'          },
     { state: IMACRO,  input: COMMENT, action: 'ignore'             },
-    { state: IMACRO,  input: BREAK,   action: 'ignore'             },
+    { state: IMACRO,  input: BREAK,   action: 'stop'               },
     { state: IMACRO,  input: ESCAPE,  action: 'startEscape'        },
     { state: IMACRO,  input: '*',     action: 'defaultError'       },
 
@@ -131,8 +132,12 @@ var Parser = function (input) {
    * @since 0.0.1
    *
    */
-  this.lastTok = function () {
+  this.lastTokenInAst = function () {
     return this.ast[this.ast.length - 1];
+  };
+
+  this.lastParsedToken = function() {
+    return this.lastParsedToken;
   };
 
   this.isEscapeWithArguments = function(token) {
@@ -144,7 +149,7 @@ var Parser = function (input) {
 
 Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
-  this.lastTok()
+  this.lastTokenInAst()
     .addSubNode(token);
 };
 
@@ -154,7 +159,7 @@ Parser.prototype.startEscape = function (token) {
 };
 
 Parser.prototype.escapeText = function (token) {
-  var lastToken = this.lastTok();
+  var lastToken = this.lastTokenInAst();
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
@@ -172,21 +177,25 @@ Parser.prototype.addEscape = function (token) {
   this.state = BREAK;
 };
 
-Parser.prototype.addImacro = function (token) {
-  // If the value of the token is a space character,
-  // keep going until we find a valid argument
-  // TODO: document this in a proper way
-  if (patterns.noWhiteSpace.test(token.value)) {
-    this.state = MACRO;
-  };
+Parser.prototype.imacroText = function(token) {
+  if (this.lastParsedToken().kind === TEXT) {
+    this.lastTokenInAst().lastNode().lastNode().mix(token);
+  } else {
+    this.lastTokenInAst().addSubNode(token);
+  }
+};
 
-  this.lastTok()
-    .addSubNode(token);
+Parser.prototype.addImacro = function (token) {
+  this.state = IMACRO;
+
+  this.lastTokenInAst()
+    .addNode(token);
 };
 
 Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
-  this.lastTok()
+
+  this.lastTokenInAst()
     .addNode(token);
 };
 
@@ -195,7 +204,7 @@ Parser.prototype.addLineBreak = function (token) {
 };
 
 Parser.prototype.addText = function (token) {
-  var lastToken = this.lastTok();
+  var lastToken = this.lastTokenInAst();
 
   if(lastToken.lastNode()
     .kind === TEXT) {
@@ -223,6 +232,8 @@ Parser.prototype.buildAST = function () {
     }
 
     func(token);
+
+    this.lastParsedToken = token;
     this.idx++;
   }
 
@@ -234,7 +245,7 @@ Parser.prototype.cleanBreak = function (token) {
 };
 
 Parser.prototype.concatenate = function (token) {
-  this.lastTok()
+  this.lastTokenInAst()
     .mix(token);
 };
 
