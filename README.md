@@ -133,7 +133,6 @@ make bench flags='-s'
 - [ ] Finish unit tests
 - [x] Fix issues with the parser
 - [x] Add missing macros
-- [ ] Clarify that we do not intend to copy the behavior of groff_html
 - [ ] Documentation
   - [x] Implement a build system to document pages
   - [ ] Add documentation to all the code
@@ -144,7 +143,8 @@ make bench flags='-s'
 - [x] Add CI integration
 - [x] Handle scape characters
 - [ ] Add support for nested numeric lists
-- [ ] Add support for `-compact` and `-width` arguments in lists
+- [x] Add support for `-compact` arguments in lists
+- [ ] Add support for `-width` arguments in lists
 - [ ] Make clear when the code is using a global variable
 
 ### Links
