@@ -51,7 +51,8 @@ var patterns = {
   realNumber: /(^[\-|\+]?\d)/,
   escape: /(\\[^\"])/g,
   wrappingQuotes: /^\s*?\"([^\"]*)\"\s*?$/g,
-  noWhiteSpace: /\S/
+  noWhiteSpace: /\S/,
+  newLine: /[ \t]*\n/
 };
 
 /**
@@ -129,7 +130,7 @@ Token.isComment = function (str) {
  *
  */
 Token.isEmptyLine = function (str) {
-  return str === '\n';
+  return patterns.newLine.test(str);
 };
 
 /**
@@ -454,6 +455,8 @@ var Parser = function (input) {
   this.lexer = new Lexer(input);
   this.tokens = this.lexer.lex();
   this.tokenslen = this.tokens.length;
+  this.lastParsedToken = null;
+  this.test = null;
   this.idx = 0;
   this.state = BREAK;
   this.buffer = {};
@@ -476,10 +479,10 @@ var Parser = function (input) {
     { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
 
     // IMACRO mappings
-    { state: IMACRO,  input: TEXT,    action: 'addImacro'          },
+    { state: IMACRO,  input: TEXT,    action: 'imacroText'         },
     { state: IMACRO,  input: IMACRO,  action: 'addImacro'          },
     { state: IMACRO,  input: COMMENT, action: 'ignore'             },
-    { state: IMACRO,  input: BREAK,   action: 'ignore'             },
+    { state: IMACRO,  input: BREAK,   action: 'stop'               },
     { state: IMACRO,  input: ESCAPE,  action: 'startEscape'        },
     { state: IMACRO,  input: '*',     action: 'defaultError'       },
 
@@ -554,7 +557,7 @@ var Parser = function (input) {
    * @since 0.0.1
    *
    */
-  this.lastTok = function () {
+  this.lastPushedToken = function () {
     return this.ast[this.ast.length - 1];
   };
 
@@ -567,7 +570,7 @@ var Parser = function (input) {
 
 Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
-  this.lastTok()
+  this.lastPushedToken()
     .addSubNode(token);
 };
 
@@ -577,7 +580,7 @@ Parser.prototype.startEscape = function (token) {
 };
 
 Parser.prototype.escapeText = function (token) {
-  var lastToken = this.lastTok();
+  var lastToken = this.lastPushedToken();
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
@@ -595,21 +598,25 @@ Parser.prototype.addEscape = function (token) {
   this.state = BREAK;
 };
 
-Parser.prototype.addImacro = function (token) {
-  // If the value of the token is a space character,
-  // keep going until we find a valid argument
-  // TODO: document this in a proper way
-  if (patterns.noWhiteSpace.test(token.value)) {
-    this.state = MACRO;
-  };
+Parser.prototype.imacroText = function(token) {
+  if (this.lastParsedToken.kind === TEXT) {
+    this.lastPushedToken().lastNode().lastNode().mix(token);
+  } else {
+    this.lastPushedToken().addSubNode(token);
+  }
+};
 
-  this.lastTok()
-    .addSubNode(token);
+Parser.prototype.addImacro = function (token) {
+  this.state = IMACRO;
+
+  this.lastPushedToken()
+    .addNode(token);
 };
 
 Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
-  this.lastTok()
+
+  this.lastPushedToken()
     .addNode(token);
 };
 
@@ -618,7 +625,7 @@ Parser.prototype.addLineBreak = function (token) {
 };
 
 Parser.prototype.addText = function (token) {
-  var lastToken = this.lastTok();
+  var lastToken = this.lastPushedToken();
 
   if(lastToken.lastNode()
     .kind === TEXT) {
@@ -646,6 +653,8 @@ Parser.prototype.buildAST = function () {
     }
 
     func(token);
+
+    this.lastParsedToken = token;
     this.idx++;
   }
 
@@ -657,7 +666,7 @@ Parser.prototype.cleanBreak = function (token) {
 };
 
 Parser.prototype.concatenate = function (token) {
-  this.lastTok()
+  this.lastPushedToken()
     .mix(token);
 };
 
@@ -1772,7 +1781,7 @@ macros.doc = {
     args = this.parseArguments(args);
 
     this.buffer.lists.unshift({
-      kind: args[0],
+      flags: args,
       prevTag: '',
       isOpen: false
     });
@@ -1806,54 +1815,60 @@ macros.doc = {
       pre = list.isOpen ? '</span></li>' : '',
       tagStyles = '',
       tag = '',
-      contentStyles = '';
+      contentStyles = 'margin-bottom:2%;';
 
     list.isOpen = true;
 
-    switch(list.kind) {
-    case '-bullet':
-      tag = '&compfn;';
-      contentStyles = 'margin-left:2%';
-      break;
+    for (var i = list.flags.length - 1; i >= 0; i--) {
+      switch(list.flags[i]) {
+      case '-bullet':
+        tag = '&compfn;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-dash':
-      tag = '&minus;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-dash':
+        tag = '&minus;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-enum':
-      list.prevTag = list.prevTag || 1;
-      tag = (list.prevTag++) + '.';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-enum':
+        list.prevTag = list.prevTag || 1;
+        tag = (list.prevTag++) + '.';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-item':
-      tag = '';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-item':
+        tag = '';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-tag':
-      tag = args;
-      tagStyles = 'display:block;margin-bottom:15px;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-tag':
+        tag = args;
+        tagStyles += 'display:inline-block;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-hang':
-      tag = this.generateTag('i', args);
-      tagStyles = 'width:8%;display:inline-block;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-hang':
+        tag = this.generateTag('i', args);
+        tagStyles += 'width:8%;display:inline-block;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-ohang':
-      tag = this.generateTag('strong', args);
-      tagStyles = 'display:block;';
-      contentStyles = 'margin-bottom:2%;display:inline-block';
-      break;
+      case '-ohang':
+        tag = this.generateTag('strong', args);
+        tagStyles += 'display:block;';
+        contentStyles += 'display:inline-block';
+        break;
 
-    case '-inset':
-      tag = this.generateTag('i', args);
-      contentStyles = 'margin-bottom:2%;display:inline-block;';
-      break;
+      case '-inset':
+        tag = this.generateTag('i', args);
+        contentStyles += 'display:inline-block;';
+        break;
+
+      case '-compact':
+        tagStyles += 'margin-bottom: 0;';
+        contentStyles += 'margin-bottom:0;';
+      }
     }
 
     return(
