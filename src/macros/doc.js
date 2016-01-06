@@ -455,7 +455,7 @@ macros.doc = {
     args = this.parseArguments(args);
 
     this.buffer.lists.unshift({
-      kind: args[0],
+      flags: args,
       prevTag: '',
       isOpen: false
     });
@@ -489,54 +489,60 @@ macros.doc = {
       pre = list.isOpen ? '</span></li>' : '',
       tagStyles = '',
       tag = '',
-      contentStyles = '';
+      contentStyles = 'margin-bottom:2%;';
 
     list.isOpen = true;
 
-    switch(list.kind) {
-    case '-bullet':
-      tag = '&compfn;';
-      contentStyles = 'margin-left:2%';
-      break;
+    for (var i = list.flags.length - 1; i >= 0; i--) {
+      switch(list.flags[i]) {
+      case '-bullet':
+        tag = '&compfn;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-dash':
-      tag = '&minus;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-dash':
+        tag = '&minus;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-enum':
-      list.prevTag = list.prevTag || 1;
-      tag = (list.prevTag++) + '.';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-enum':
+        list.prevTag = list.prevTag || 1;
+        tag = (list.prevTag++) + '.';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-item':
-      tag = '';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-item':
+        tag = '';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-tag':
-      tag = args;
-      tagStyles = 'display:block;margin-bottom:15px;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-tag':
+        tag = args;
+        tagStyles += 'display:inline-block;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-hang':
-      tag = this.generateTag('i', args);
-      tagStyles = 'width:8%;display:inline-block;';
-      contentStyles = 'margin-left:2%';
-      break;
+      case '-hang':
+        tag = this.generateTag('i', args);
+        tagStyles += 'width:8%;display:inline-block;';
+        contentStyles += 'margin-left:2%;';
+        break;
 
-    case '-ohang':
-      tag = this.generateTag('strong', args);
-      tagStyles = 'display:block;';
-      contentStyles = 'margin-bottom:2%;display:inline-block';
-      break;
+      case '-ohang':
+        tag = this.generateTag('strong', args);
+        tagStyles += 'display:block;';
+        contentStyles += 'display:inline-block';
+        break;
 
-    case '-inset':
-      tag = this.generateTag('i', args);
-      contentStyles = 'margin-bottom:2%;display:inline-block;';
-      break;
+      case '-inset':
+        tag = this.generateTag('i', args);
+        contentStyles += 'display:inline-block;';
+        break;
+
+      case '-compact':
+        tagStyles += 'margin-bottom: 0;';
+        contentStyles += 'margin-bottom:0;';
+      }
     }
 
     return(
