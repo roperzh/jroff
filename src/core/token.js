@@ -47,7 +47,7 @@ Token.isComment = function (str) {
  *
  */
 Token.isEmptyLine = function (str) {
-  return str === '\n';
+  return patterns.newLine.test(str);
 };
 
 /**
