@@ -146,8 +146,6 @@ macros.defaults = {
   /**
    * Used to manage conditionals, not supported in the current version
    *
-   * @argument {string} spacing
-   *
    * @since 0.0.1
    *
    */
@@ -158,8 +156,6 @@ macros.defaults = {
   /**
    * Used to manage conditionals, not supported in the current version
    *
-   * @argument {string} spacing
-   *
    * @since 0.0.1
    *
    */
@@ -169,8 +165,6 @@ macros.defaults = {
 
   /**
    * Used to manage conditionals, not supported in the current version
-   *
-   * @argument {string} spacing
    *
    * @since 0.0.1
    *
