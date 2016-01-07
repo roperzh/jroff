@@ -171,7 +171,7 @@ HTMLGenerator.prototype.closeTag = function (tag) {
  *
  */
 HTMLGenerator.prototype.closeAllTags = function (tags) {
-  return this.closeTagsUntil('', tags);
+  return this.closeTagsUntil(tags[0], tags);
 };
 
 /**
@@ -191,12 +191,14 @@ HTMLGenerator.prototype.closeTagsUntil = function(limitTag, tags) {
   var result = '',
     tag;
 
-  while((tag = tags.pop())) {
-    result += this.closeTag(tag);
+  if (tags.indexOf(limitTag) !== -1) {
+    while((tag = tags.pop())) {
+      result += this.closeTag(tag);
 
-    if (tag === limitTag) {
-      break;
-    };
+      if (tag === limitTag) {
+        break;
+      };
+    }
   }
 
   return result;

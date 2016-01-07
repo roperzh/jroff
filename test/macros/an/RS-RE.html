@@ -1,0 +1,93 @@
+<!--
+@it starts relative margin indent, and uses a default value if no value is provided
+
+.RS
+lorem ipsum
+.RE
+-->
+
+<section style="margin-left:8%">lorem ipsum</section>
+
+<!--
+@it starts relative margin indent, and uses the value provided as argument
+
+.RS 2
+lorem ipsum
+.RE
+-->
+
+<section style="margin-left:2%">lorem ipsum</section>
+
+<!--
+@it does not close font tags when the '.RE' macro is reached
+
+.RS
+lorem \fBipsum\fR dolor \fIsit
+.RE
+-->
+
+<section style="margin-left:8%">
+  lorem
+  <strong>ipsum</strong>
+  dolor
+  <i>sit
+</section>
+
+<!--
+@it works well with nested '.P' tags
+
+.RS
+lorem ipsum
+.P
+dolor sit amet
+.RE
+-->
+
+<section style="margin-left:8%">
+  lorem ipsum
+  <div style="margin-bottom: 2%;">
+    dolor sit amet
+  </div>
+</section>
+
+<!--
+@it works well with nested '.P' tags and font modes
+
+.RS
+lorem \fIipsum
+.P
+dolor sit\fB amet
+.P
+consectetur\fB
+.RE
+-->
+
+<section style="margin-left:8%">
+  lorem <i>ipsum</i>
+  <div style="margin-bottom: 2%;">
+    dolor sit <strong>amet</strong>
+  </div>
+  <div style="margin-bottom: 2%;">
+    consectetur <strong>
+  </div>
+</section>
+
+<!--
+@it FIXME: wrong output
+
+.P
+lorem
+.RS
+ipsum
+.P
+dolor
+.RE
+-->
+
+<div style="margin-bottom: 2%;">
+  lorem
+  <section style="margin-left:8%">
+    ipsum
+  </section>
+</div>
+<div style="margin-bottom: 2%;">dolor

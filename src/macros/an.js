@@ -255,17 +255,35 @@ macros.an = {
     return result + '<div style="margin-bottom: 2%;">';
   },
 
-  RS: function () {
+  /**
+   * Start relative margin indent: moves the left margin `indent` to
+   * the right (if is omitted, the prevailing indent value is used).
+   *
+   * @param {string} indent
+   *
+   * @since 0.0.1
+   *
+   */
+  RS: function (indent) {
     var result = '';
+
+    indent = indent || this.buffer.style.indent;
 
     result += this.closeAllTags(this.buffer.fontModes);
     this.buffer.openTags.push('section');
 
-    return result += '<section style="margin-left:' + this.buffer.style.indent + '%">';
+    return result += '<section style="margin-left:' + indent + '%">';
   },
 
+  /**
+   * End relative margin indent and restores the previous value
+   * of the prevailing indent.
+   *
+   * @since 0.0.1
+   *
+   */
   RE: function () {
-    return this.closeTagsUntil('div', this.buffer.openTags);
+    return this.closeTagsUntil('section', this.buffer.openTags);
   }
 };
 
