@@ -1440,5 +1440,5 @@ macros.doc = {
    */
   Em: function (text) {
     return this.generateTag('i', text);
-  },
+  }
 };

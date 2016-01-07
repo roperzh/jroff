@@ -337,7 +337,7 @@ macros.defaults = {
     args = args.split(patterns.realNumber);
     txt = args[2] || '';
 
-    this.buffer.style.fontSize += parseInt(args[1]);
+    this.buffer.style.fontSize += parseInt(args[1], 10);
     this.buffer.openTags.push('span');
 
     return(
@@ -395,5 +395,5 @@ macros.defaults = {
 
   '\\+': function () {
     return '&plus;';
-  },
+  }
 };
