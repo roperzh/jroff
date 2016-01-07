@@ -178,6 +178,47 @@ macros.defaults = {
   },
 
   /**
+   * Used to define new macros, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  de: function() {
+    return '';
+  },
+
+  /**
+   * Need `number` vertical space, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  ne: function(number) {
+    return '';
+  },
+
+  /**
+   * Custom pattern present in some man pages, does not produce any
+   * output
+   *
+   * @since 0.0.1
+   *
+   */
+  '.': function() {
+    return '';
+  },
+
+  /**
+   * Fill output lines, does not apply for the current implementation
+   *
+   * @since 0.0.1
+   *
+   */
+  fi: function() {
+    return '';
+  },
+
+  /**
    * Disable hyphenation
    *
    * @since 0.0.1
@@ -187,7 +228,6 @@ macros.defaults = {
     /* TODO: apply this property somewhere */
     this.buffer.style.hyphens = 'none';
   },
-
 
   /**
    * Adjust output lines with mode c; where c = l, r, c, b,none
@@ -343,5 +383,9 @@ macros.defaults = {
    */
   '\\u': function () {
     return '';
-  }
+  },
+
+  '\\+': function() {
+    return '&plus;';
+  },
 };
