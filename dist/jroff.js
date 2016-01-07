@@ -456,7 +456,6 @@ var Parser = function (input) {
   this.tokens = this.lexer.lex();
   this.tokenslen = this.tokens.length;
   this.lastParsedToken = null;
-  this.test = null;
   this.idx = 0;
   this.state = BREAK;
   this.buffer = {};
@@ -557,7 +556,7 @@ var Parser = function (input) {
    * @since 0.0.1
    *
    */
-  this.lastPushedToken = function () {
+  this.lastTokenInAst = function () {
     return this.ast[this.ast.length - 1];
   };
 
@@ -570,8 +569,8 @@ var Parser = function (input) {
 
 Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
-  this.lastPushedToken()
-    .addSubNode(token);
+  this.lastTokenInAst()
+    .addNode(token);
 };
 
 Parser.prototype.startEscape = function (token) {
@@ -580,7 +579,7 @@ Parser.prototype.startEscape = function (token) {
 };
 
 Parser.prototype.escapeText = function (token) {
-  var lastToken = this.lastPushedToken();
+  var lastToken = this.lastTokenInAst();
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
@@ -600,23 +599,23 @@ Parser.prototype.addEscape = function (token) {
 
 Parser.prototype.imacroText = function(token) {
   if (this.lastParsedToken.kind === TEXT) {
-    this.lastPushedToken().lastNode().lastNode().mix(token);
+    this.lastTokenInAst().lastNode().lastNode().mix(token);
   } else {
-    this.lastPushedToken().addSubNode(token);
+    this.lastTokenInAst().addSubNode(token);
   }
 };
 
 Parser.prototype.addImacro = function (token) {
   this.state = IMACRO;
 
-  this.lastPushedToken()
+  this.lastTokenInAst()
     .addNode(token);
 };
 
 Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
 
-  this.lastPushedToken()
+  this.lastTokenInAst()
     .addNode(token);
 };
 
@@ -625,7 +624,7 @@ Parser.prototype.addLineBreak = function (token) {
 };
 
 Parser.prototype.addText = function (token) {
-  var lastToken = this.lastPushedToken();
+  var lastToken = this.lastTokenInAst();
 
   if(lastToken.lastNode()
     .kind === TEXT) {
@@ -666,7 +665,7 @@ Parser.prototype.cleanBreak = function (token) {
 };
 
 Parser.prototype.concatenate = function (token) {
-  this.lastPushedToken()
+  this.lastTokenInAst()
     .mix(token);
 };
 
@@ -949,7 +948,7 @@ macros.an = {
 
     this.buffer.openTags.push('div');
 
-    return result + '<div>';
+    return result + '<div style="margin-bottom: 2%;">';
   },
 
   RS: function () {
@@ -967,7 +966,6 @@ macros.an = {
 };
 
 macros.an.LP = macros.an.P;
-/* TODO: check this one */
 macros.an.PP = macros.an.P;
 
 var fontMappings = {
@@ -1118,8 +1116,6 @@ macros.defaults = {
   /**
    * Used to manage conditionals, not supported in the current version
    *
-   * @argument {string} spacing
-   *
    * @since 0.0.1
    *
    */
@@ -1130,8 +1126,6 @@ macros.defaults = {
   /**
    * Used to manage conditionals, not supported in the current version
    *
-   * @argument {string} spacing
-   *
    * @since 0.0.1
    *
    */
@@ -1141,8 +1135,6 @@ macros.defaults = {
 
   /**
    * Used to manage conditionals, not supported in the current version
-   *
-   * @argument {string} spacing
    *
    * @since 0.0.1
    *
@@ -1156,6 +1148,47 @@ macros.defaults = {
   },
 
   /**
+   * Used to define new macros, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  de: function() {
+    return '';
+  },
+
+  /**
+   * Need `number` vertical space, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  ne: function(number) {
+    return '';
+  },
+
+  /**
+   * Custom pattern present in some man pages, does not produce any
+   * output
+   *
+   * @since 0.0.1
+   *
+   */
+  '.': function() {
+    return '';
+  },
+
+  /**
+   * Fill output lines, does not apply for the current implementation
+   *
+   * @since 0.0.1
+   *
+   */
+  fi: function() {
+    return '';
+  },
+
+  /**
    * Disable hyphenation
    *
    * @since 0.0.1
@@ -1165,7 +1198,6 @@ macros.defaults = {
     /* TODO: apply this property somewhere */
     this.buffer.style.hyphens = 'none';
   },
-
 
   /**
    * Adjust output lines with mode c; where c = l, r, c, b,none
@@ -1321,7 +1353,11 @@ macros.defaults = {
    */
   '\\u': function () {
     return '';
-  }
+  },
+
+  '\\+': function() {
+    return '&plus;';
+  },
 };
 
 var docSections = {
@@ -2814,7 +2850,8 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       }
 
       var f = this.macros[node.value] || function () {
-        return node.value;
+        console.warn('Unsupported macro:', node.value);
+        return '';
       };
 
       partial = node.nodes.length ? f.call(this, this.generateRecursive(node.nodes)) : f.call(this, '');
