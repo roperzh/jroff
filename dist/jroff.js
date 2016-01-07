@@ -277,8 +277,9 @@ Token.prototype.mixWithLastNode = function (token) {
  *
  * @since 0.0.1
  */
-Token.prototype.lastNodeIsNotSpace = function() {
-  return patterns.noWhiteSpace.test(this.lastNode().value);
+Token.prototype.lastNodeIsNotSpace = function () {
+  return patterns.noWhiteSpace.test(this.lastNode()
+    .value);
 };
 
 /**
@@ -472,7 +473,7 @@ var Parser = function (input) {
     // MACRO mappings
     { state: MACRO,   input: BREAK,   action: 'stop'               },
     { state: MACRO,   input: TEXT,    action: 'addText'            },
-    { state: MACRO,   input: IMACRO,  action: 'addInlineMacro'     },
+    { state: MACRO,   input: IMACRO,  action: 'addImacro'          },
     { state: MACRO,   input: COMMENT, action: 'ignore'             },
     { state: MACRO,   input: MACRO,   action: 'addText'            },
     { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
@@ -497,12 +498,12 @@ var Parser = function (input) {
     { state: TEXT,    input: COMMENT, action: 'ignore'             },
     { state: TEXT,    input: TEXT,    action: 'concatenate'        },
     { state: TEXT,    input: BREAK,   action: 'stop'               },
-    { state: TEXT,    input: IMACRO,  action: 'addInlineMacro'     },
+    { state: TEXT,    input: IMACRO,  action: 'addImacro'          },
     { state: TEXT,    input: ESCAPE,  action: 'startEscape'        },
 
     // ESCAPE mappings
     { state: ESCAPE,  input: TEXT,    action: 'escapeText'         },
-    { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
+    { state: ESCAPE,  input: IMACRO,  action: 'addImacro'          },
     { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
     { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
     { state: ESCAPE,  input: MACRO,   action: 'escapeText'         },
@@ -560,7 +561,7 @@ var Parser = function (input) {
     return this.ast[this.ast.length - 1];
   };
 
-  this.isEscapeWithArguments = function(token) {
+  this.isEscapeWithArguments = function (token) {
     return this.escapeWithArguments.indexOf(token.value) !== -1;
   };
 
@@ -583,9 +584,9 @@ Parser.prototype.escapeText = function (token) {
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
-    if (lastToken.lastNodeIsNotSpace()) {
+    if(lastToken.lastNodeIsNotSpace()) {
       this.startText(new Token(''));
-    };
+    }
 
   } else {
     this.startText(token);
@@ -597,22 +598,19 @@ Parser.prototype.addEscape = function (token) {
   this.state = BREAK;
 };
 
-Parser.prototype.imacroText = function(token) {
-  if (this.lastParsedToken.kind === TEXT) {
-    this.lastTokenInAst().lastNode().lastNode().mix(token);
+Parser.prototype.imacroText = function (token) {
+  if(this.lastParsedToken.kind === TEXT) {
+    this.lastTokenInAst()
+      .lastNode()
+      .lastNode()
+      .mix(token);
   } else {
-    this.lastTokenInAst().addSubNode(token);
+    this.lastTokenInAst()
+      .addSubNode(token);
   }
 };
 
 Parser.prototype.addImacro = function (token) {
-  this.state = IMACRO;
-
-  this.lastTokenInAst()
-    .addNode(token);
-};
-
-Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
 
   this.lastTokenInAst()
@@ -951,17 +949,37 @@ macros.an = {
     return result + '<div style="margin-bottom: 2%;">';
   },
 
-  RS: function () {
+  /**
+   * Start relative margin indent: moves the left margin `indent` to
+   * the right (if is omitted, the prevailing indent value is used).
+   *
+   * @param {string} indent
+   *
+   * @since 0.0.1
+   *
+   */
+  RS: function (indent) {
     var result = '';
 
+    indent = indent || this.buffer.style.indent;
+
     result += this.closeAllTags(this.buffer.fontModes);
+    result += '<section style="margin-left:' + indent + '%">';
+
     this.buffer.openTags.push('section');
 
-    return result += '<section style="margin-left:' + this.buffer.style.indent + '%">';
+    return result;
   },
 
+  /**
+   * End relative margin indent and restores the previous value
+   * of the prevailing indent.
+   *
+   * @since 0.0.1
+   *
+   */
   RE: function () {
-    return this.closeTagsUntil('div', this.buffer.openTags);
+    return this.closeTagsUntil('section', this.buffer.openTags);
   }
 };
 
@@ -1016,7 +1034,7 @@ macros.defaults = {
 
     result += this.closeAllTags(this.buffer.fontModes);
 
-    if (type !== fontMappings.R) {
+    if(type !== fontMappings.R) {
       result += '<' + type + '> ';
       this.buffer.fontModes.push(type);
     }
@@ -1041,15 +1059,17 @@ macros.defaults = {
   },
 
   /**
-   * Set the vertical spacing of the following paragraphs
+   * No filling or adjusting of output lines.
    *
-   * @argument {string} spacing
+   * This macro is useless in the context of the current
+   * implementation, it only produces a line break (similar to the
+   * default groff output)
    *
    * @since 0.0.1
    *
    */
-  nf: function (spacing) {
-    return macros.defaults.vs.call(this, spacing);
+  nf: function () {
+    return '<br>';
   },
 
   /**
@@ -1143,7 +1163,13 @@ macros.defaults = {
     return '';
   },
 
-  '\\}': function() {
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  '\\}': function () {
     return '';
   },
 
@@ -1153,7 +1179,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  de: function() {
+  de: function () {
     return '';
   },
 
@@ -1163,7 +1189,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  ne: function(number) {
+  ne: function () {
     return '';
   },
 
@@ -1174,7 +1200,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  '.': function() {
+  '.': function () {
     return '';
   },
 
@@ -1184,7 +1210,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  fi: function() {
+  fi: function () {
     return '';
   },
 
@@ -1194,7 +1220,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  nh: function() {
+  nh: function () {
     /* TODO: apply this property somewhere */
     this.buffer.style.hyphens = 'none';
   },
@@ -1204,7 +1230,7 @@ macros.defaults = {
    *
    * @since 0.0.1
    */
-  ad: function(align) {
+  ad: function (align) {
     /* TODO: apply this property somewhere */
     this.buffer.style.textAlign = align;
   },
@@ -1355,7 +1381,7 @@ macros.defaults = {
     return '';
   },
 
-  '\\+': function() {
+  '\\+': function () {
     return '&plus;';
   },
 };
@@ -1855,7 +1881,7 @@ macros.doc = {
 
     list.isOpen = true;
 
-    for (var i = list.flags.length - 1; i >= 0; i--) {
+    for(var i = list.flags.length - 1; i >= 0; i--) {
       switch(list.flags[i]) {
       case '-bullet':
         tag = '&compfn;';
@@ -2978,7 +3004,7 @@ HTMLGenerator.prototype.closeTag = function (tag) {
  *
  */
 HTMLGenerator.prototype.closeAllTags = function (tags) {
-  return this.closeTagsUntil('', tags);
+  return this.closeTagsUntil(tags[0], tags);
 };
 
 /**
@@ -2994,16 +3020,18 @@ HTMLGenerator.prototype.closeAllTags = function (tags) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.closeTagsUntil = function(limitTag, tags) {
+HTMLGenerator.prototype.closeTagsUntil = function (limitTag, tags) {
   var result = '',
     tag;
 
-  while((tag = tags.pop())) {
-    result += this.closeTag(tag);
+  if(tags.indexOf(limitTag) !== -1) {
+    while((tag = tags.pop())) {
+      result += this.closeTag(tag);
 
-    if (tag === limitTag) {
-      break;
-    };
+      if(tag === limitTag) {
+        break;
+      }
+    }
   }
 
   return result;
@@ -3025,7 +3053,8 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return this.cleanQuotes(arg).trim();
+    return this.cleanQuotes(arg)
+      .trim();
   }.bind(this));
 };
 
