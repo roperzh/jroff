@@ -140,6 +140,11 @@ var Parser = function (input) {
     return this.escapeWithArguments.indexOf(token.value) !== -1;
   };
 
+  this.goToStateAndPush = function (state, token) {
+    this.state = state;
+    this.ast.push(token);
+  };
+
   this.initMappings();
 };
 
@@ -150,12 +155,12 @@ Parser.prototype.macroEscape = function (token) {
 };
 
 Parser.prototype.startEscape = function (token) {
-  this.ast.push(token);
-  this.state = ESCAPE;
+  this.goToStateAndPush(ESCAPE, token);
 };
 
 Parser.prototype.escapeText = function (token) {
   var lastToken = this.lastTokenInAst();
+
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
@@ -169,8 +174,7 @@ Parser.prototype.escapeText = function (token) {
 };
 
 Parser.prototype.addEscape = function (token) {
-  this.ast.push(token);
-  this.state = BREAK;
+  this.goToStateAndPush(BREAK, token);
 };
 
 Parser.prototype.imacroText = function (token) {
@@ -187,7 +191,6 @@ Parser.prototype.imacroText = function (token) {
 
 Parser.prototype.addImacro = function (token) {
   this.state = IMACRO;
-
   this.lastTokenInAst()
     .addNode(token);
 };
@@ -254,13 +257,11 @@ Parser.prototype.ignore = function () {
 };
 
 Parser.prototype.startMacro = function (token) {
-  this.state = MACRO;
-  this.ast.push(token);
+  this.goToStateAndPush(MACRO, token);
 };
 
 Parser.prototype.startText = function (token) {
-  this.state = TEXT;
-  this.ast.push(token);
+  this.goToStateAndPush(TEXT, token);
 };
 
 Parser.prototype.stop = function () {
