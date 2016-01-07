@@ -43,7 +43,8 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
       }
 
       var f = this.macros[node.value] || function () {
-        return node.value;
+        console.warn('Unsupported macro:', node.value);
+        return '';
       };
 
       partial = node.nodes.length ? f.call(this, this.generateRecursive(node.nodes)) : f.call(this, '');
