@@ -252,7 +252,7 @@ macros.an = {
 
     this.buffer.openTags.push('div');
 
-    return result + '<div>';
+    return result + '<div style="margin-bottom: 2%;">';
   },
 
   RS: function () {
@@ -270,5 +270,4 @@ macros.an = {
 };
 
 macros.an.LP = macros.an.P;
-/* TODO: check this one */
 macros.an.PP = macros.an.P;
