@@ -71,15 +71,17 @@ macros.defaults = {
   },
 
   /**
-   * Set the vertical spacing of the following paragraphs
+   * No filling or adjusting of output lines.
    *
-   * @argument {string} spacing
+   * This macro is useless in the context of the current
+   * implementation, it only produces a line break (similar to the
+   * default groff output)
    *
    * @since 0.0.1
    *
    */
-  nf: function (spacing) {
-    return macros.defaults.vs.call(this, spacing);
+  nf: function () {
+    return '<br>';
   },
 
   /**
