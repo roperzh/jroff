@@ -2364,6 +2364,76 @@
     },
 
     /**
+     * Prints NetBSD and appends the version number if provided
+     *
+     * @argument {string} version
+     *
+     * @since 0.0.1
+     *
+     */
+    Nx: function (version) {
+      return this.generateTag('span', 'NetBSD ' + version);
+    },
+
+    /**
+     * Prints FreeBSD and appends the version number if provided
+     *
+     * @argument {string} version
+     *
+     * @since 0.0.1
+     *
+     */
+    Fx: function (version) {
+      return this.generateTag('span', 'FreeBSD ' + version);
+    },
+
+    /**
+     * Prints DragonFly and appends the version number if provided
+     *
+     * @argument {string} version
+     *
+     * @since 0.0.1
+     *
+     */
+    Dx: function (version) {
+      return this.generateTag('span', 'DragonFly ' + version);
+    },
+
+    /**
+     * Prints OpenBSD and appends the version number if provided
+     *
+     * @argument {string} version
+     *
+     * @since 0.0.1
+     *
+     */
+    Ox: function (version) {
+      return this.generateTag('span', 'OpenBSD ' + version);
+    },
+
+    /**
+     * Prints BSD/OS and appends the version number if provided
+     *
+     * @argument {string} version
+     *
+     * @since 0.0.1
+     *
+     */
+    Osx: function (version) {
+      return this.generateTag('span', 'BSD/OS ' + version);
+    },
+
+    /**
+     * Prints UNIX
+     *
+     * @since 0.0.1
+     *
+     */
+    Ux: function () {
+      return this.generateTag('span', 'UNIX');
+    },
+
+    /**
      * Formats path or file names.  If called without arguments,
      * the `~' string is output, which represents the current user's
      * home directory.
