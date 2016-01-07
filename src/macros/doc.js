@@ -1046,6 +1046,20 @@ macros.doc = {
   },
 
   /**
+   * Suppresses the whitespace between its first and second argument
+   *
+   * @argument {string} args
+   *
+   * @since 0.0.1
+   *
+   */
+  Pf: function (args) {
+    args = this.parseArguments(args);
+
+    return args.shift() + args.shift() + args.join(' ');
+  },
+
+  /**
    * Formats path or file names.  If called without arguments,
    * the `~' string is output, which represents the current user's
    * home directory.
