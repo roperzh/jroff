@@ -146,7 +146,7 @@ var Parser = function (input) {
 Parser.prototype.macroEscape = function (token) {
   this.state = MACRO;
   this.lastTokenInAst()
-    .addSubNode(token);
+    .addNode(token);
 };
 
 Parser.prototype.startEscape = function (token) {
