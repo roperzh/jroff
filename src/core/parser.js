@@ -136,10 +136,6 @@ var Parser = function (input) {
     return this.ast[this.ast.length - 1];
   };
 
-  this.lastParsedToken = function() {
-    return this.lastParsedToken;
-  };
-
   this.isEscapeWithArguments = function(token) {
     return this.escapeWithArguments.indexOf(token.value) !== -1;
   };
@@ -178,7 +174,7 @@ Parser.prototype.addEscape = function (token) {
 };
 
 Parser.prototype.imacroText = function(token) {
-  if (this.lastParsedToken().kind === TEXT) {
+  if (this.lastParsedToken.kind === TEXT) {
     this.lastTokenInAst().lastNode().lastNode().mix(token);
   } else {
     this.lastTokenInAst().addSubNode(token);
