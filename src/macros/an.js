@@ -270,9 +270,11 @@ macros.an = {
     indent = indent || this.buffer.style.indent;
 
     result += this.closeAllTags(this.buffer.fontModes);
+    result += '<section style="margin-left:' + indent + '%">';
+
     this.buffer.openTags.push('section');
 
-    return result += '<section style="margin-left:' + indent + '%">';
+    return result;
   },
 
   /**

@@ -493,7 +493,7 @@ macros.doc = {
 
     list.isOpen = true;
 
-    for (var i = list.flags.length - 1; i >= 0; i--) {
+    for(var i = list.flags.length - 1; i >= 0; i--) {
       switch(list.flags[i]) {
       case '-bullet':
         tag = '&compfn;';

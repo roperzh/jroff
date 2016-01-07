@@ -46,7 +46,7 @@ macros.defaults = {
 
     result += this.closeAllTags(this.buffer.fontModes);
 
-    if (type !== fontMappings.R) {
+    if(type !== fontMappings.R) {
       result += '<' + type + '> ';
       this.buffer.fontModes.push(type);
     }
@@ -175,7 +175,13 @@ macros.defaults = {
     return '';
   },
 
-  '\\}': function() {
+  /**
+   * Used to manage conditionals, not supported in the current version
+   *
+   * @since 0.0.1
+   *
+   */
+  '\\}': function () {
     return '';
   },
 
@@ -185,7 +191,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  de: function() {
+  de: function () {
     return '';
   },
 
@@ -195,7 +201,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  ne: function(number) {
+  ne: function () {
     return '';
   },
 
@@ -206,7 +212,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  '.': function() {
+  '.': function () {
     return '';
   },
 
@@ -216,7 +222,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  fi: function() {
+  fi: function () {
     return '';
   },
 
@@ -226,7 +232,7 @@ macros.defaults = {
    * @since 0.0.1
    *
    */
-  nh: function() {
+  nh: function () {
     /* TODO: apply this property somewhere */
     this.buffer.style.hyphens = 'none';
   },
@@ -236,7 +242,7 @@ macros.defaults = {
    *
    * @since 0.0.1
    */
-  ad: function(align) {
+  ad: function (align) {
     /* TODO: apply this property somewhere */
     this.buffer.style.textAlign = align;
   },
@@ -387,7 +393,7 @@ macros.defaults = {
     return '';
   },
 
-  '\\+': function() {
+  '\\+': function () {
     return '&plus;';
   },
 };

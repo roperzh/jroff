@@ -187,17 +187,17 @@ HTMLGenerator.prototype.closeAllTags = function (tags) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.closeTagsUntil = function(limitTag, tags) {
+HTMLGenerator.prototype.closeTagsUntil = function (limitTag, tags) {
   var result = '',
     tag;
 
-  if (tags.indexOf(limitTag) !== -1) {
+  if(tags.indexOf(limitTag) !== -1) {
     while((tag = tags.pop())) {
       result += this.closeTag(tag);
 
-      if (tag === limitTag) {
+      if(tag === limitTag) {
         break;
-      };
+      }
     }
   }
 
@@ -220,7 +220,8 @@ HTMLGenerator.prototype.parseArguments = function (args) {
   args = args.match(patterns.arguments) || [];
 
   return args.map(function (arg) {
-    return this.cleanQuotes(arg).trim();
+    return this.cleanQuotes(arg)
+      .trim();
   }.bind(this));
 };
 

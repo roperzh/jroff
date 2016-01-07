@@ -48,7 +48,7 @@ var Parser = function (input) {
     // MACRO mappings
     { state: MACRO,   input: BREAK,   action: 'stop'               },
     { state: MACRO,   input: TEXT,    action: 'addText'            },
-    { state: MACRO,   input: IMACRO,  action: 'addInlineMacro'     },
+    { state: MACRO,   input: IMACRO,  action: 'addImacro'          },
     { state: MACRO,   input: COMMENT, action: 'ignore'             },
     { state: MACRO,   input: MACRO,   action: 'addText'            },
     { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
@@ -73,12 +73,12 @@ var Parser = function (input) {
     { state: TEXT,    input: COMMENT, action: 'ignore'             },
     { state: TEXT,    input: TEXT,    action: 'concatenate'        },
     { state: TEXT,    input: BREAK,   action: 'stop'               },
-    { state: TEXT,    input: IMACRO,  action: 'addInlineMacro'     },
+    { state: TEXT,    input: IMACRO,  action: 'addImacro'          },
     { state: TEXT,    input: ESCAPE,  action: 'startEscape'        },
 
     // ESCAPE mappings
     { state: ESCAPE,  input: TEXT,    action: 'escapeText'         },
-    { state: ESCAPE,  input: IMACRO,  action: 'addInlineMacro'     },
+    { state: ESCAPE,  input: IMACRO,  action: 'addImacro'          },
     { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
     { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
     { state: ESCAPE,  input: MACRO,   action: 'escapeText'         },
@@ -136,7 +136,7 @@ var Parser = function (input) {
     return this.ast[this.ast.length - 1];
   };
 
-  this.isEscapeWithArguments = function(token) {
+  this.isEscapeWithArguments = function (token) {
     return this.escapeWithArguments.indexOf(token.value) !== -1;
   };
 
@@ -159,9 +159,9 @@ Parser.prototype.escapeText = function (token) {
   if(this.isEscapeWithArguments(lastToken)) {
     lastToken.addNode(token);
 
-    if (lastToken.lastNodeIsNotSpace()) {
+    if(lastToken.lastNodeIsNotSpace()) {
       this.startText(new Token(''));
-    };
+    }
 
   } else {
     this.startText(token);
@@ -173,22 +173,19 @@ Parser.prototype.addEscape = function (token) {
   this.state = BREAK;
 };
 
-Parser.prototype.imacroText = function(token) {
-  if (this.lastParsedToken.kind === TEXT) {
-    this.lastTokenInAst().lastNode().lastNode().mix(token);
+Parser.prototype.imacroText = function (token) {
+  if(this.lastParsedToken.kind === TEXT) {
+    this.lastTokenInAst()
+      .lastNode()
+      .lastNode()
+      .mix(token);
   } else {
-    this.lastTokenInAst().addSubNode(token);
+    this.lastTokenInAst()
+      .addSubNode(token);
   }
 };
 
 Parser.prototype.addImacro = function (token) {
-  this.state = IMACRO;
-
-  this.lastTokenInAst()
-    .addNode(token);
-};
-
-Parser.prototype.addInlineMacro = function (token) {
   this.state = IMACRO;
 
   this.lastTokenInAst()

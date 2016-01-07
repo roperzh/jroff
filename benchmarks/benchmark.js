@@ -43,7 +43,7 @@ suite.add('Git', function() {
     results.push(partialResults);
 
     fs.writeFileSync('./benchmarks/benchmark.json', JSON.stringify(results));
-  };
+  }
 })
 .on('error', function(e) {
   console.log(e)

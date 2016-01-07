@@ -194,6 +194,7 @@ Token.prototype.mixWithLastNode = function (token) {
  *
  * @since 0.0.1
  */
-Token.prototype.lastNodeIsNotSpace = function() {
-  return patterns.noWhiteSpace.test(this.lastNode().value);
+Token.prototype.lastNodeIsNotSpace = function () {
+  return patterns.noWhiteSpace.test(this.lastNode()
+    .value);
 };
