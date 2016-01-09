@@ -1,0 +1,30 @@
+{
+  "name": "jroff",
+  "description": "A man page parser for the web",
+  "main": "dist/jroff.js",
+  "authors": [
+    "Roberto Dip <roperzh>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "man",
+    "mdoc",
+    "mandoc",
+    "manpage",
+    "groff",
+    "roff"
+  ],
+  "homepage": "https://github.com/roperzh/jroff",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
