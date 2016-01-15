@@ -563,7 +563,7 @@
   /**
    * Group all `an` macros
    * @namespace
-   * @alias anMacros
+   * @alias macros.an
    * @since 0.0.1
    */
   macros.an = {
@@ -861,6 +861,12 @@
     S: 'small'
   };
 
+  /**
+   * Group all defautl groff macros
+   * @namespace
+   * @alias macros.defaults
+   * @since 0.0.1
+   */
   macros.defaults = {
     /**
      * Adds a line break
