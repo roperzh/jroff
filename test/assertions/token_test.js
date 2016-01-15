@@ -81,54 +81,6 @@ describe('Token', function () {
         }.bind(this));
       });
     });
-
-    describe('#mixWithLastNode', function () {
-      it('mixes a token with the last node of another token', function () {
-        var token3 = new jroff.Token('token 3', jroff.TEXT);
-
-        this.token1.addNode(token3);
-        this.token1.mixWithLastNode(this.token2);
-
-        assert.equal(this.token1.lastNode()
-          .value, 'token 3token 2');
-        assert.equal(this.token1.lastNode()
-          .kind, jroff.TEXT);
-      });
-    });
-
-    describe('#addSubNode', function () {
-      it('pushes a token into the nodes collection of the last node of a given token', function () {
-        var token3 = new jroff.Token('token 3', jroff.TEXT);
-
-        this.token1.addNode(token3);
-        this.token1.addSubNode(this.token2);
-
-        assert.equal(this.token1.nodes.length, 1);
-        assert.equal(this.token1.lastNode()
-          .nodes.length, 1);
-        assert.equal(this.token1.lastNode()
-          .lastNode(), this.token2);
-      });
-    });
-
-    describe('#lastNodeIsNotSpace', function () {
-      it('returns false when the last node of the token is a whitespace', function () {
-        var token3 = new jroff.Token('  ', jroff.TEXT);
-
-        this.token1.addNode(token3);
-
-        assert.ok(!this.token1.lastNodeIsNotSpace());
-      });
-
-      it('returns true when the last node of the token is not a whitespace', function () {
-        var token3 = new jroff.Token('asf', jroff.TEXT);
-
-        this.token1.addNode(token3);
-
-        assert.ok(this.token1.lastNodeIsNotSpace());
-      });
-    });
-
   });
 
   describe('class methods', function () {

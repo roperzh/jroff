@@ -33,7 +33,7 @@ describe('TokenFactory', function () {
         token = this.factory.create(rawMacro);
 
       assert.equal(token.kind, jroff.MACRO);
-      assert.equal(token.value, 'SH');
+      assert.equal(token.value, '.SH');
     });
 
     it('creates a IMACRO token based on a raw string', function () {

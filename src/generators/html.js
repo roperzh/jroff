@@ -25,6 +25,7 @@ HTMLGenerator.prototype.generate = function (source, lib) {
     openTags: [],
     fontModes: [],
     sectionTags: [],
+    activeFontModes: [],
     section: ''
   };
 
@@ -42,9 +43,9 @@ HTMLGenerator.prototype.generateRecursive = function (arr) {
         result += this.closeAllTags(this.buffer.openTags);
       }
 
-      var f = this.macros[node.value] || function () {
+      var f = this.macros[node.value] || function (args) {
         console.warn('Unsupported macro:', node.value);
-        return '';
+        return args;
       };
 
       partial = node.nodes.length ? f.call(this, this.generateRecursive(node.nodes)) : f.call(this, '');

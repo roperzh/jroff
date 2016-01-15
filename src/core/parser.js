@@ -9,261 +9,179 @@
  *
  * @property {string} input raw contents of the man page
  *
- * @property {array} ast
- *
- * @property {Lexer} lexer instance of the Lexer class
- *
- * @property {array} tokens provided by the lexer.lex method
- *
- * @property {number} tokenslen cache the length of the tokens array
- *
- * @property {number} idx current index
- *
- * @property {number} state current state
- *
- * @property {object} buffer stores custom variables between states
- *
  * @since 0.0.1
  *
  */
 var Parser = function (input) {
   this.ast = [];
+  this.scope = this.ast;
   this.lexer = new Lexer(input);
   this.tokens = this.lexer.lex();
-  this.tokenslen = this.tokens.length;
-  this.lastParsedToken = null;
-  this.idx = 0;
-  this.state = BREAK;
-  this.buffer = {};
+  this.lastTok = new Token('', BREAK);
   this.escapeWithArguments = ['\\f', '\\s', '\\m', '\\('];
 
-  /* beautify ignore:start */
-
-  var mappings = [
-
-    // COMMENT mappings
-    { state: COMMENT, input: BREAK,   action: 'stop'               },
-    { state: COMMENT, input: '*',     action: 'ignore'             },
-
-    // MACRO mappings
-    { state: MACRO,   input: BREAK,   action: 'stop'               },
-    { state: MACRO,   input: TEXT,    action: 'addText'            },
-    { state: MACRO,   input: IMACRO,  action: 'addImacro'          },
-    { state: MACRO,   input: COMMENT, action: 'ignore'             },
-    { state: MACRO,   input: MACRO,   action: 'addText'            },
-    { state: MACRO,   input: ESCAPE,  action: 'macroEscape'        },
-
-    // IMACRO mappings
-    { state: IMACRO,  input: TEXT,    action: 'imacroText'         },
-    { state: IMACRO,  input: IMACRO,  action: 'addImacro'          },
-    { state: IMACRO,  input: COMMENT, action: 'ignore'             },
-    { state: IMACRO,  input: BREAK,   action: 'stop'               },
-    { state: IMACRO,  input: ESCAPE,  action: 'startEscape'        },
-    { state: IMACRO,  input: '*',     action: 'defaultError'       },
-
-    // BREAK mappings
-    { state: BREAK,   input: MACRO,   action: 'startMacro'         },
-    { state: BREAK,   input: BREAK,   action: 'addLineBreak'       },
-    { state: BREAK,   input: TEXT,    action: 'startText'          },
-    { state: BREAK,   input: ESCAPE,  action: 'startEscape'        },
-    { state: BREAK,   input: '*',     action: 'cleanBreak'         },
-
-    // TEXT mappings
-    { state: TEXT,    input: MACRO,   action: 'concatenate'        },
-    { state: TEXT,    input: COMMENT, action: 'ignore'             },
-    { state: TEXT,    input: TEXT,    action: 'concatenate'        },
-    { state: TEXT,    input: BREAK,   action: 'stop'               },
-    { state: TEXT,    input: IMACRO,  action: 'addImacro'          },
-    { state: TEXT,    input: ESCAPE,  action: 'startEscape'        },
-
-    // ESCAPE mappings
-    { state: ESCAPE,  input: TEXT,    action: 'escapeText'         },
-    { state: ESCAPE,  input: IMACRO,  action: 'addImacro'          },
-    { state: ESCAPE,  input: BREAK,   action: 'addEscape'          },
-    { state: ESCAPE,  input: COMMENT, action: 'ignore'             },
-    { state: ESCAPE,  input: MACRO,   action: 'escapeText'         },
-    { state: ESCAPE,  input: ESCAPE,  action: 'startEscape'        },
-    { state: ESCAPE,  input: '*',     action: 'defaultError'       }
-  ];
-
-  /* beautify ignore:end */
-
-  /**
-   * Privileged method with access to the `mappings` array, this is
-   * a sort of hack in order to allow the nice DSL-like notation
-   * of transitions between states.
-   *
-   * The idea is to create an alias method in the parser instance
-   * per transition listed in the `mappings` array.
-   *
-   * For example if state = TEXT, input = BREAK and action = 'stop'
-   * a property called TEXT-BREAK ( '5-4' if we replace the values )
-   * will be created in the parser, and will point to the
-   * Parser.prototype.stop method
-   *
-   * @returns {undefined}
-   *
-   * @since 0.0.1
-   *
-   */
-  this.initMappings = function () {
-    var mapping,
-      actionName;
-
-    for(var i = mappings.length - 1; i >= 0; i--) {
-      mapping = mappings[i];
-      actionName = mapping.state + '-' + mapping.input;
-
-      if(!this[mapping.action]) {
-        throw(
-          'Undefined function ' + mapping.action + ' in Parser object'
-        );
-      }
-
-      this[actionName] = this[mapping.action].bind(this);
-    }
-  };
-
-  /**
-   * Retrieve the last token stored in the AST
-   *
-   * @returns {Token} token
-   *
-   * @since 0.0.1
-   *
-   */
-  this.lastTokenInAst = function () {
-    return this.ast[this.ast.length - 1];
-  };
-
-  this.isEscapeWithArguments = function (token) {
-    return this.escapeWithArguments.indexOf(token.value) !== -1;
-  };
-
-  this.goToStateAndPush = function (state, token) {
-    this.state = state;
-    this.ast.push(token);
-  };
-
-  this.initMappings();
+  this.mappings = {};
+  this.mappings[MACRO] = 'handleMacro';
+  this.mappings[IMACRO] = 'setNewScope';
+  this.mappings[TEXT] = 'handleText';
+  this.mappings[ESCAPE] = 'handleEscape';
+  this.mappings[BREAK] = 'handleBreak';
+  this.mappings[COMMENT] = 'ignore';
+  this.mappings[EMPTY] = 'ignore';
 };
 
-Parser.prototype.macroEscape = function (token) {
-  this.state = MACRO;
-  this.lastTokenInAst()
-    .addNode(token);
+/**
+ * Return the next token in the lexer queue
+ *
+ * @returns {Token}
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.next = function () {
+  return this.tokens.shift();
 };
 
-Parser.prototype.startEscape = function (token) {
-  this.goToStateAndPush(ESCAPE, token);
+/**
+ * Add the last token into the scope, and set it as the last parsed
+ * token
+ *
+ * @returns {Token}
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.addToScope = function (token) {
+  this.scope.push(token);
+  this.lastTok = token;
 };
 
-Parser.prototype.escapeText = function (token) {
-  var lastToken = this.lastTokenInAst();
-
-  if(this.isEscapeWithArguments(lastToken)) {
-    lastToken.addNode(token);
-
-    if(lastToken.lastNodeIsNotSpace()) {
-      this.startText(new Token(''));
-    }
-
-  } else {
-    this.startText(token);
-  }
-};
-
-Parser.prototype.addEscape = function (token) {
-  this.goToStateAndPush(BREAK, token);
-};
-
-Parser.prototype.imacroText = function (token) {
-  if(this.lastParsedToken.kind === TEXT) {
-    this.lastTokenInAst()
-      .lastNode()
-      .lastNode()
-      .mix(token);
-  } else {
-    this.lastTokenInAst()
-      .addSubNode(token);
-  }
-};
-
-Parser.prototype.addImacro = function (token) {
-  this.state = IMACRO;
-  this.lastTokenInAst()
-    .addNode(token);
-};
-
-Parser.prototype.addLineBreak = function (token) {
-  this.ast.push(token);
-};
-
-Parser.prototype.addText = function (token) {
-  var lastToken = this.lastTokenInAst();
-
-  if(lastToken.lastNode()
-    .kind === TEXT) {
-    lastToken.mixWithLastNode(token);
-  } else {
-    lastToken.addNode(token);
-  }
-};
-
+/**
+ * Go through all tokens in the lexer queue and return an AST
+ * describing the relationship between them.
+ *
+ * @returns {array}
+ *
+ * @since 0.0.1
+ *
+ */
 Parser.prototype.buildAST = function () {
-  var token,
-    funcName,
-    func;
+  var token;
 
-  while(this.tokenslen > this.idx) {
-    token = this.tokens[this.idx];
-    funcName = this.state + '-' + token.kind;
-    func = this[funcName] || this[this.state + '-*'];
-
-    if(!func) {
-      throw(
-        'Cannot find a function named ' +
-        funcName + ' or ' + this.state + '-*'
-      );
-    }
-
-    func(token);
-
-    this.lastParsedToken = token;
-    this.idx++;
+  while((token = this.next())) {
+    this[this.mappings[token.kind]](token);
   }
 
   return this.ast;
 };
 
-Parser.prototype.cleanBreak = function (token) {
-  this.state = token.kind;
+/**
+ * Handle macro tokens, if the last parsed token is a line break,
+ * the token is a macro and it should call 'setNewScope', otherwise
+ * it's a false positive (example: a period in a sentence) and it
+ * should call 'handleText'
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.handleMacro = function (token) {
+  if(this.lastTok.kind === BREAK) {
+    /* Remove the starting dot and any whitespace */
+    token.value = token.value.replace(patterns.macroStart, '');
+    this.setNewScope(token);
+  } else {
+    this.handleText(token);
+  }
 };
 
-Parser.prototype.concatenate = function (token) {
-  this.lastTokenInAst()
-    .mix(token);
+/**
+ * Used by macros and inline macros; this function changes the current
+ * scope to the 'nodes' property of the current token
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.setNewScope = function (token) {
+  this.addToScope(token);
+  this.scope = token.nodes;
 };
 
-Parser.prototype.defaultError = function (token) {
-  throw(
-    'Error parsing argument with state: ' +
-    this.state + ', input: ' + token.kind
-  );
+/**
+ * Handles line breaks:
+ *
+ * - If the last parsed token is another line break, we should add a
+ * 'br' token in order to emulate the groff behavior
+ * - Otherwise the line break resets the scope to the default scope
+ * (this.ast)
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.handleBreak = function (token) {
+  this.scope = this.ast;
+
+  if(this.lastTok.kind === BREAK) {
+    this.scope.push(new Token('br', MACRO));
+  }
+
+  this.lastTok = token;
 };
 
-Parser.prototype.ignore = function () {
-  this.state = COMMENT;
+/**
+ * Handles escape sequences, since any scape sequence will be in the
+ * form: ESCAPE + SPACING + ARGUMENT ( check Lexer.js ) we are just
+ * pushing the next two following tokens into the 'nodes' array of
+ * the current token
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.handleEscape = function (token) {
+  if(this.escapeWithArguments.indexOf(token.value) !== -1) {
+    var escapeParam;
+
+    this.next();
+    escapeParam = this.next();
+    escapeParam.kind = TEXT;
+    token.nodes.push(escapeParam);
+  }
+
+  this.addToScope(token);
 };
 
-Parser.prototype.startMacro = function (token) {
-  this.goToStateAndPush(MACRO, token);
+/**
+ * Handles text:
+ *
+ * - if the value of the token is an empty string, just return.
+ * - if the last parsed token is another text token, mix both
+ * - if the last parsed token isn't another text token, this is the
+ * first text token in the chain, so just add it to the current scope
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.handleText = function (token) {
+  if(!token.value) {
+    return;
+  }
+
+  token.kind = TEXT;
+
+  if(this.lastTok.kind === TEXT) {
+    this.lastTok.mix(token);
+  } else {
+    this.addToScope(token);
+  }
 };
 
-Parser.prototype.startText = function (token) {
-  this.goToStateAndPush(TEXT, token);
-};
-
-Parser.prototype.stop = function () {
-  this.state = BREAK;
+/**
+ * Create a ghost scope, so all the content pushed in it will be
+ * ignored, useful for comments
+ *
+ * @since 0.0.1
+ *
+ */
+Parser.prototype.ignore = function (token) {
+  this.scope = [];
+  this.lastTok = token;
 };

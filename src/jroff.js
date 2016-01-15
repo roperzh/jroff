@@ -25,8 +25,9 @@ var callableMacros = [
  *
  */
 var patterns = {
-  macro: /^\.[^\.]/,
-  lexeme: /(\n|\s+)/g,
+  macro: /^\./,
+  macroStart: /^.\s*/,
+  lexeme: /(\n|\s+|^\.\s+\S+)/g,
   comment: /(\.\\)?\\\"/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,

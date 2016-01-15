@@ -35,7 +35,7 @@ files.forEach(function (f) {
         .split(testDirective),
         html = fileContents[i + 1],
         message = directives[1],
-        rawMan = directives[2],
+        rawMan = directives[2].trim(),
         parsed = generator.generate(rawMan, extension);
 
       runTest(message, html, parsed);

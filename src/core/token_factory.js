@@ -37,7 +37,6 @@ TokenFactory.prototype.create = function (rawToken) {
     kind = COMMENT;
   } else if(Token.isMacro(rawToken)) {
     kind = MACRO;
-    rawToken = rawToken.substring(1);
   } else if(Token.isInlineMacro(rawToken)) {
     kind = IMACRO;
   } else if(Token.isEmptyLine(rawToken)) {

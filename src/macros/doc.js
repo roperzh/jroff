@@ -1369,7 +1369,6 @@ macros.doc = {
     mode = this.parseArguments(mode)[0];
     tag = fontModes[mode] || 'span';
 
-    this.buffer.activeFontModes = this.buffer.activeFontModes || [];
     this.buffer.activeFontModes.push(tag);
 
     return '<' + tag + '>';

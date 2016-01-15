@@ -111,24 +111,6 @@ Token.prototype.addNode = function (token) {
 };
 
 /**
- * Add a given token into the nodes array of the last node
- *
- * @param {Token} token
- *
- * @returns {Token} the token instance itself, useful for method
- * chaining
- *
- * @todo clarify the documentation and add examples
- *
- * @since 0.0.1
- *
- */
-Token.prototype.addSubNode = function (token) {
-  this.lastNode()
-    .addNode(token);
-};
-
-/**
  * Return the last node in the nodes array, if the array is empty,
  * safely return a new token of kind EMPTY
  *
@@ -164,37 +146,4 @@ Token.prototype.mix = function (token) {
   }
 
   return this;
-};
-
-/**
- * Mix a given token, with the last token in the nodes collection,
- * if the nodes collection is empty, safely mix it with an empty token
- * via the `lastNode` function
- *
- * @param {Token} the token to be mixed
- *
- * @returns {Token} the token instance itself, useful for method
- * chaining
- *
- * @since 0.0.1
- *
- */
-Token.prototype.mixWithLastNode = function (token) {
-  this.lastNode()
-    .mix(token);
-
-  return this;
-};
-
-/**
- * Checks if the last node stored in the current token
- * is a whitespace sequence
- *
- * @returns {Boolean}
- *
- * @since 0.0.1
- */
-Token.prototype.lastNodeIsNotSpace = function () {
-  return patterns.noWhiteSpace.test(this.lastNode()
-    .value);
 };

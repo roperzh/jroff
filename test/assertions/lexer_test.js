@@ -47,7 +47,7 @@ describe('Lexer', function () {
       var tokens = this.lexer.lex();
 
       assert.equal(tokens[0].kind, jroff.MACRO);
-      assert.equal(tokens[0].value, 'TH');
+      assert.equal(tokens[0].value, '.TH');
 
       assert.equal(tokens[1].kind, jroff.TEXT);
       assert.equal(tokens[1].value, ' ');

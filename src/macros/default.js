@@ -42,7 +42,11 @@ macros.defaults = {
    */
   ft: function (fontType) {
     var result = '',
-      type = fontMappings[fontType.trim()];
+      type;
+
+    /* the font type can be a string with multiple arguments */
+    fontType = this.parseArguments(fontType)[0];
+    type = fontMappings[fontType.trim()];
 
     result += this.closeAllTags(this.buffer.fontModes);
 
