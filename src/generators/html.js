@@ -152,11 +152,11 @@ HTMLGenerator.prototype.generateTag = function (name, content) {
  *
  * This is specially useful for macros like BI, BR, etc.
  *
- * @param {string} firstTag
+ * @param {string} tag1
  *
- * @param {string} secondTag
+ * @param {string} tag2
  *
- * @param {string} content
+ * @param {string} c
  *
  * @returns {string}
  *
@@ -165,16 +165,16 @@ HTMLGenerator.prototype.generateTag = function (name, content) {
  * @since 0.0.1
  *
  */
-HTMLGenerator.prototype.generateAlternTag = function (firstTag, secondTag, content) {
+HTMLGenerator.prototype.generateAlternTag = function (tag1, tag2, c) {
   var i = -1,
     result = '',
-    currentTag = secondTag;
+    currentTag = tag2;
 
-  content = this.parseArguments(content);
+  c = this.parseArguments(c);
 
-  while(content[++i]) {
-    currentTag = currentTag === firstTag ? secondTag : firstTag;
-    result += this.generateTag(currentTag, content[i]);
+  while(c[++i]) {
+    currentTag = currentTag === tag1 ? tag2 : firstTag;
+    result += this.generateTag(currentTag, c[i]);
   }
 
   return result;
