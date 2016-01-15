@@ -60,6 +60,7 @@ Lexer.prototype.cleanSource = function (source) {
 Lexer.prototype.lex = function () {
   var lexeme;
 
+  /* This check is here because empty strings can break the loop */
   while(typeof (lexeme = this.next()) !== 'undefined') {
     this.tokens.push(this.factory.create(lexeme));
   }

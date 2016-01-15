@@ -13,6 +13,8 @@ HTMLGenerator.prototype.generate = function (source, lib) {
   lib = lib || 'doc';
 
   this.macros = mergeObjects([macros.defaults, macros[lib]]);
+
+  /* Global variable, used to define if a token is imacro */
   macroLib = lib;
 
   this.buffer = {
@@ -29,36 +31,67 @@ HTMLGenerator.prototype.generate = function (source, lib) {
     section: ''
   };
 
-  return this.generateRecursive(ast);
+  return this.recurse(ast);
 };
 
-HTMLGenerator.prototype.generateRecursive = function (arr) {
-  var partial;
+/**
+ * Fires the recursive generation of the HTML based on the
+ * AST hierarchy, uses the native reduce function
+ *
+ * @param {array} arr of tokens
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.recurse = function (arr) {
+  return arr.reduce(this.reduceRecursive.bind(this), '');
+};
 
-  return arr.reduce(function (result, node) {
-    if(node.kind === MACRO || node.kind === IMACRO || node.kind === ESCAPE) {
+/**
+ * Meant to be used as an auxiliar function for the reduce call
+ * in 'this.recurse'
+ *
+ * @param {string} result
+ *
+ * @param {token} node
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.reduceRecursive = function (result, node) {
+  var tokensWithNodes = [MACRO, IMACRO, ESCAPE],
+    func,
+    args;
 
-      if(node.value === 'Sh' || node.value === 'SH') {
-        result += this.closeAllTags(this.buffer.fontModes);
-        result += this.closeAllTags(this.buffer.openTags);
-      }
-
-      var f = this.macros[node.value] || function (args) {
-        console.warn('Unsupported macro:', node.value);
-        return args;
-      };
-
-      partial = node.nodes.length ? f.call(this, this.generateRecursive(node.nodes)) : f.call(this, '');
-
-      result += partial || '';
-
-    } else {
-      result += this.cleanQuotes(node.value);
+  if(tokensWithNodes.indexOf(node.kind) !== -1) {
+    if(node.value === 'Sh' || node.value === 'SH') {
+      result += this.closeAllTags(this.buffer.fontModes);
+      result += this.closeAllTags(this.buffer.openTags);
     }
 
-    return result;
+    func = this.macros[node.value] || this.undefMacro;
+    args = node.nodes.length ? this.recurse(node.nodes) : '';
+    result += func.call(this, args, node) || '';
+  } else {
+    result += this.cleanQuotes(node.value);
+  }
 
-  }.bind(this), '');
+  return result;
+};
+
+/**
+ * Fallback function for undefined macros
+ *
+ * @param {string} args
+ *
+ * @param {token} node
+ *
+ * @since 0.0.1
+ *
+ */
+HTMLGenerator.prototype.undefMacro = function (args, node) {
+  console.warn('Unsupported macro:', node.value);
+  return args;
 };
 
 /**
@@ -224,20 +257,6 @@ HTMLGenerator.prototype.parseArguments = function (args) {
     return this.cleanQuotes(arg)
       .trim();
   }.bind(this));
-};
-
-/**
- * Shortcut to join an array using whitespaces
- *
- * @argument {array} arr
- *
- * @returns {string}
- *
- * @since 0.0.1
- *
- */
-HTMLGenerator.prototype.join = function (arr) {
-  return Array.prototype.join.call(arr, ' ');
 };
 
 /**
