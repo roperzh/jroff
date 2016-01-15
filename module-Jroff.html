@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jroff - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Parser.html">Parser</a><ul class='methods'><li data-type='method'><a href="Parser.html#addToScope">addToScope</a></li><li data-type='method'><a href="Parser.html#buildAST">buildAST</a></li><li data-type='method'><a href="Parser.html#handleBreak">handleBreak</a></li><li data-type='method'><a href="Parser.html#handleEscape">handleEscape</a></li><li data-type='method'><a href="Parser.html#handleMacro">handleMacro</a></li><li data-type='method'><a href="Parser.html#handleText">handleText</a></li><li data-type='method'><a href="Parser.html#ignore">ignore</a></li><li data-type='method'><a href="Parser.html#next">next</a></li><li data-type='method'><a href="Parser.html#setNewScope">setNewScope</a></li></ul></li><li><a href="Token.html">Token</a><ul class='methods'><li data-type='method'><a href="Token.html#.isComment">isComment</a></li><li data-type='method'><a href="Token.html#.isEmptyLine">isEmptyLine</a></li><li data-type='method'><a href="Token.html#.isEscape">isEscape</a></li><li data-type='method'><a href="Token.html#.isInlineMacro">isInlineMacro</a></li><li data-type='method'><a href="Token.html#.isMacro">isMacro</a></li><li data-type='method'><a href="Token.html#addNode">addNode</a></li><li data-type='method'><a href="Token.html#lastNode">lastNode</a></li><li data-type='method'><a href="Token.html#mix">mix</a></li></ul></li><li><a href="TokenFactory.html">TokenFactory</a><ul class='methods'><li data-type='method'><a href="TokenFactory.html#create">create</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-Jroff.html">Jroff</a></li></ul><h3>Namespaces</h3><ul><li><a href="-_anonymous_-macros.doc.html">doc</a><ul class='methods'><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525A%2522">"%A"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525B%2522">"%B"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525D%2522">"%D"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525I%2522">"%I"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525J%2522">"%J"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525N%2522">"%N"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525O%2522">"%O"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525P%2522">"%P"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525Q%2522">"%Q"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525R%2522">"%R"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525T%2522">"%T"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.%2522%2525V%2522">"%V"</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ac">Ac</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ad">Ad</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.An">An</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ao">Ao</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Aq">Aq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ar">Ar</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.At">At</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bc">Bc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bf">Bf</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bl">Bl</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bo">Bo</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bq">Bq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Brc">Brc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bro">Bro</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Brq">Brq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Bx">Bx</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Cd">Cd</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Cm">Cm</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dc">Dc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dd">Dd</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Do">Do</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dq">Dq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dt">Dt</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dv">Dv</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Dx">Dx</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ec">Ec</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ef">Ef</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.El">El</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Em">Em</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Eo">Eo</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Eq">Eq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ev">Ev</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fa">Fa</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fc">Fc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fl">Fl</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fn">Fn</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fo">Fo</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ft">Ft</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Fx">Fx</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.It">It</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Li">Li</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Nd">Nd</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Nm">Nm</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Nx">Nx</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Oc">Oc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Oo">Oo</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Op">Op</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Os">Os</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Osx">Osx</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ox">Ox</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Pa">Pa</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Pc">Pc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Pf">Pf</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Po">Po</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Pp">Pp</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Pq">Pq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Qc">Qc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ql">Ql</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Qo">Qo</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Qq">Qq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Re">Re</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Rs">Rs</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Sc">Sc</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Sh">Sh</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.So">So</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Sq">Sq</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ss">Ss</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.St">St</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Sy">Sy</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Tn">Tn</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Ux">Ux</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Va">Va</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Vt">Vt</a></li><li data-type='method'><a href="-_anonymous_-macros.doc.html#.Xr">Xr</a></li></ul></li><li><a href="patterns.html">patterns</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Jroff</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Jroff 0.0.1 <http://roperzh.github.io/jroff.js>
+Copyright (c)2015 Roberto Dip <http://roperzh.com></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><ul class="dummy"><li>Distributed under MIT license</li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jroff.js.html">jroff.js</a>, <a href="jroff.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jan 15 2016 20:42:45 GMT-0300 (ART) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
