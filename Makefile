@@ -43,7 +43,7 @@ test:
 	node_modules/.bin/istanbul cover \
 		node_modules/.bin/_mocha test/test.js -- -R dot
 
-doc: build
+doc: build beautify
 	$(notify_task)
 	node_modules/.bin/jsdoc --verbose -d docs -t node_modules/minami ${DIST}
 
