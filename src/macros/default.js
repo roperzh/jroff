@@ -5,6 +5,12 @@ var fontMappings = {
   S: 'small'
 };
 
+/**
+ * Group all defautl groff macros
+ * @namespace
+ * @alias macros.defaults
+ * @since 0.0.1
+ */
 macros.defaults = {
   /**
    * Adds a line break

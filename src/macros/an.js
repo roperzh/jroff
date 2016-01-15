@@ -1,7 +1,7 @@
 /**
  * Group all `an` macros
  * @namespace
- * @alias anMacros
+ * @alias macros.an
  * @since 0.0.1
  */
 macros.an = {
