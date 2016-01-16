@@ -174,7 +174,8 @@ Parser.prototype.handleText = function (token) {
   } else {
     if(canHaveNodes(this.lastTok)) {
       token.value = token.value.trim();
-    };
+    }
+
     this.addToScope(token);
   }
 };
