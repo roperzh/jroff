@@ -30,8 +30,8 @@ min:
 
 hint: build beautify
 	$(notify_task)
-	node_modules/.bin/jshint ${DIST}
-	node_modules/.bin/jshint ${TEST}
+	node_modules/.bin/eslint ${DIST}
+	node_modules/.bin/eslint ${TEST}
 
 beautify:
 	$(notify_task)
