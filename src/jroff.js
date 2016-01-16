@@ -28,7 +28,7 @@ var patterns = {
   macro: /^\./,
   macroStart: /^.\s*/,
   lexeme: /(\n|\s+|^\.\s+\S+)/g,
-  comment: /(\.\\)?\\\"/,
+  comment: /(\.)?\\\"|\\#/,
   arguments: /"(.*?)"|\S+/g,
   number: /[\d]/,
   realNumber: /(^[\-|\+]?\d)/,
