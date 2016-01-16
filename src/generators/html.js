@@ -136,11 +136,11 @@ HTMLGenerator.prototype.generateTag = function (name, content) {
     closingTags = '';
 
   while(tags[++i]) {
-    openingTags += '<' + tags[i] + '> ';
+    openingTags += '<' + tags[i] + '>';
   }
 
   while(tags[--i]) {
-    closingTags += ' </' + tags[i] + '>';
+    closingTags += '</' + tags[i] + '>';
   }
 
   return openingTags + content + closingTags;

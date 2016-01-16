@@ -378,7 +378,7 @@ macros.doc = {
     var openingTag = '<section style="margin-left:' +
       this.buffer.style.indent + '%;">';
 
-    this.buffer.section = args.trim();
+    this.buffer.section = args;
 
     return '</section>' + this.generateTag('h2', args) + openingTag;
   },
@@ -919,7 +919,7 @@ macros.doc = {
   St: function (args) {
     var cont = '';
 
-    args = args.trim();
+    args = args;
 
     if(abbreviations[args]) {
       cont = this.generateTag('abbr', abbreviations[args]);
@@ -964,7 +964,7 @@ macros.doc = {
       out;
 
     base = 'BSD';
-    version = version.trim();
+    version = version;
 
     if(version === '-devel') {
       out = base + '(currently under development)';
