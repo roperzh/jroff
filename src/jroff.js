@@ -61,5 +61,19 @@ var mergeObjects = function (objects) {
   }, {});
 };
 
+/**
+ * Returns a boolean describing if the token can have nodes
+ *
+ * @argument {token} token
+ *
+ * @returns {boolean}
+ *
+ * @since 0.0.1
+ *
+ */
+var canHaveNodes = function (token) {
+  return [MACRO, IMACRO, ESCAPE].indexOf(token.kind) !== -1
+};
+
 var macros = {},
   macroLib = null;

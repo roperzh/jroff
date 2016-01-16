@@ -172,6 +172,9 @@ Parser.prototype.handleText = function (token) {
   if(this.lastTok.kind === TEXT) {
     this.lastTok.mix(token);
   } else {
+    if(canHaveNodes(this.lastTok)) {
+      token.value = token.value.trim();
+    };
     this.addToScope(token);
   }
 };

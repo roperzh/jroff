@@ -59,11 +59,10 @@ HTMLGenerator.prototype.recurse = function (arr) {
  *
  */
 HTMLGenerator.prototype.reduceRecursive = function (result, node) {
-  var tokensWithNodes = [MACRO, IMACRO, ESCAPE],
-    func,
+  var func,
     args;
 
-  if(tokensWithNodes.indexOf(node.kind) !== -1) {
+  if(canHaveNodes(node)) {
     if(node.value === 'Sh' || node.value === 'SH') {
       result += this.closeAllTags(this.buffer.fontModes);
       result += this.closeAllTags(this.buffer.openTags);
