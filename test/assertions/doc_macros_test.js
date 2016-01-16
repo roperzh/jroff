@@ -38,7 +38,7 @@ describe('Macros', function () {
       it('returns the same text provided in the input', function () {
         var result = jroff.macros.doc.Dv.call(this.context, 'test');
 
-        assert.equal(result, '<span> test </span>');
+        assert.equal(result, '<span>test</span>');
       });
     });
 
@@ -46,7 +46,7 @@ describe('Macros', function () {
       it('returns the same text provided in the input', function () {
         var result = jroff.macros.doc.Ev.call(this.context, 'test');
 
-        assert.equal(result, '<span> test </span>');
+        assert.equal(result, '<span>test</span>');
       });
     });
   });
