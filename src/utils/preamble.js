@@ -13,4 +13,4 @@
     } else {
       root.Jroff = factory();
     }
-  }(this, function () {
+  }(this, function () { //eslint-disable-line max-statements
