@@ -13,7 +13,7 @@
   } else {
     root.Jroff = factory();
   }
-}(this, function () {
+}(this, function () { //eslint-disable-line max-statements
 
   var COMMENT = 1,
     MACRO = 2,
