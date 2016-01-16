@@ -172,7 +172,7 @@ HTMLGenerator.prototype.generateAlternTag = function (tag1, tag2, c) {
   c = this.parseArguments(c);
 
   while(c[++i]) {
-    currentTag = currentTag === tag1 ? tag2 : firstTag;
+    currentTag = currentTag === tag1 ? tag2 : tag1;
     result += this.generateTag(currentTag, c[i]);
   }
 
