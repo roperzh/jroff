@@ -14,3 +14,4 @@
       root.Jroff = factory();
     }
   }(this, function () { //eslint-disable-line max-statements
+    "use strict";
