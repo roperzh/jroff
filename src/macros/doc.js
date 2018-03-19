@@ -1470,7 +1470,10 @@ macros.doc = {
    *
    */
   Fa: function (arg) {
-    this.buffer.functionArgs.push(arg);
+    if (this.buffer.functionArgs)
+      this.buffer.functionArgs.push(arg);
+    else
+      return this.generateTag('span', arg);
   },
 
   /**
