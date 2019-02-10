@@ -1493,6 +1493,23 @@ macros.doc = {
   },
 
   /**
+   * Preprocessor directive, in particular for listing it in the SYNOPSIS.
+   *
+   * @argument {string} args.name preprocessor directive
+   *
+   * @returns {string}
+   *
+   * @since 0.0.1
+   *
+   */
+  Fd: function (args) {
+
+    args = this.parseArguments(args);
+
+    return this.generateTag('strong', args.join(' ')) + '<br>';
+  },
+
+  /**
    * Prints the provided text in italics, if its called inside of the
    * SYNOPSIS section it also adds a line break
    *
