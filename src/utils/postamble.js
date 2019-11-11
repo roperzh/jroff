@@ -11,7 +11,8 @@
     IMACRO: IMACRO,
     BREAK: BREAK,
     TEXT: TEXT,
-    EMPTY: EMPTY
+    EMPTY: EMPTY,
+    ESCAPE: ESCAPE
   };
 
   }));
